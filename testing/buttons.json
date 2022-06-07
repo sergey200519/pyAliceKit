@@ -1,0 +1,30 @@
+{
+  "full_search": {
+    "title": "Подробный поиск",
+    "hide": "false"
+  },
+  "fast_search": {
+    "title": "Быстрый поиск",
+    "hide": "false"
+  },
+  "communication": {
+    "title": "Связь",
+    "hide": "false"
+  },
+  "info": {
+    "title": "Информация",
+    "hide": "false"
+  },
+  "help": {
+    "title": "Помощь",
+    "hide": "false"
+  },
+  "error_req": {
+    "title": "Поиск из-за ошибки",
+    "hide": "false"
+  },
+  "next_info": {
+    "title": "Последующие электрички",
+    "hide": "false"
+  }
+}

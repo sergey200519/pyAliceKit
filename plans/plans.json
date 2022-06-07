@@ -1,0 +1,55 @@
+{
+  "main": {
+    "sections": {
+      "from": {
+        "key_word": "от, из",
+        "type_section": " или norm",
+        "mandatory_presence": True
+      },
+      "to": {
+        "key_word": "до",
+        "type_section": " или norm",
+        "mandatory_presence": True
+      },
+      "when": {
+        "key_word": "через, в",
+        "type_section": "datatime",
+        "mandatory_presence": False
+      }
+    },
+    "type": "named_entity"
+  },
+  "full_name": {
+    "type": "name"
+  },
+}
+
+{
+  "main": {
+    "sections": {
+      "from": {
+        "full_value": "от Сергиев-Посада",
+        "value": "Сергиев-Посада"
+      },
+      "to": {
+        "full_value": "до Сергиев-Посада",
+        "value": "Сергиев-Посада"
+      },
+      "when": {
+        "year": "Если не указон вписываем этот год",
+        "month": "Если не указон вписываем этот месяц",
+        "day": "Если не указон вписываем этот день",
+        "hour": "Если не указон вписываем этот час",
+        "minutes": "Если не указоны вписываем эти минуты",
+        "seconds": "Если не указоны вписываем эти секунды"
+      }
+    }
+  },
+  "full_name": {
+    "value": {
+      "first_name": "Оборок или None",
+      "name": "Сергей или None",
+      "last_name": "Вальевич или None"
+    }
+  }
+}

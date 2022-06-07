@@ -1,0 +1,33 @@
+{
+  "state": {
+    "session": {
+      "from": "from_",
+      "to": "to",
+      "departure": "departure",
+      "price": "price",
+      "stops": "stops",
+      "time": "time",
+      "date": "date",
+      "title": "title",
+      "arrival": "arrival"
+    }
+  },
+  "session_state": {
+    "from": "from_",
+    "to": "to",
+    "departure": "departure",
+    "price": "price",
+    "stops": "stops",
+    "time": "time",
+    "date": "date",
+    "title": "title",
+    "arrival": "arrival"
+  },
+  "version": "event['version']",
+  "session": "event['session']",
+  "response": {
+    "buttons": "buttons_list",
+    "text": "str(text)",
+    "end_session": false
+  },
+}

@@ -1,0 +1,36 @@
+{
+  "main": {
+    "sections": {
+      "from": {
+        "key_word": "от, из",
+        "mandatory_presence": true
+      },
+      "to": {
+        "key_word": "до",
+        "mandatory_presence": true
+      },
+      "when": {
+        "key_word": "$DATETIME",
+        "mandatory_presence": false
+      }
+    },
+    "event": "main_intent_event"
+  },
+  "two": {
+    "sections": {
+      "hi": {
+        "key_word": "првет",
+        "mandatory_presence": true
+      },
+      "user": {
+        "key_word": "я",
+        "mandatory_presence": true
+      },
+      "work": {
+        "key_word": "работаю",
+        "mandatory_presence": false
+      }
+    },
+    "event": "two_intent_event"
+  }
+}

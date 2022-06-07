@@ -1,0 +1,6 @@
+{
+  "dialogs_file": "dialogs",
+  "intents_file": "intents",
+  "key_words_file": "testing/key_word",
+  "buttons_file": "testing/buttons"
+}

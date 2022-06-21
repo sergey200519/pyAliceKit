@@ -11,12 +11,6 @@
 
   "change_debug": "Чтобы увидеть логи поменяйте настройку 'debug' на true и предайте новые настройк классу PyAlice",
 
-  "events_setting_log_error": "Ошибка настроек, тип даных 'event' должен быть bool, класс остановил свою работу",
-  "debug_setting_log_error": "Ошибка настроек, тип даных 'debug' должен быть bool, класс остановил свою работу",
-  "buttons_dialogs_auto_setting_log_error": "Ошибка настроек, тип даных 'buttons_dialogs_auto' должен быть bool, класс остановил свою работу",
-  "time_zone_setting_log_error": "Ошибка настроек, 'time_zone' должен выгледеть так 'UTC+3' или '+3'",
-  "text_for_intents_text_for_key_word_setting_log_error": "Ошибка настроек, 'text_for_intents' и 'text_for_key_word' должен быть равны 'commands' или 'original_utterance'",
-
   "init_datetime_log": "Класс распознавания даты и времени был проинициализирован",
   "search_datetime_log": "Начался поиск даты и времени",
   "found_regarding_time_log": "Найдено относительное время в отрывке: ",

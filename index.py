@@ -1,6 +1,7 @@
-from module.py_alice import PyAlice
-from module.intents import Intents
-from module.errors import KeyWordErrorD
+from pyAlice.py_alice import PyAlice
+from pyAlice.intents.intents import Intents
+# from pyAlice.errors import KeyWordErrorD
+from pyAlice.intents.date_time import DateTime
 import json
 import datetime
 import time
@@ -32,7 +33,7 @@ params = {
     "new": False
   },
   "request": {
-    "command": "алиса нужно твоя помощь",
+    "command": "из раменского до выхино 15 мая 2022 года",
     "original_utterance": "алиса нужно твоя помощь",
     "nlu": {
       "tokens": [
@@ -64,16 +65,34 @@ params = {
 # with open("testing/settings.json", "r") as f:
 #     settings = json.loads(f.read())
 # print(settings)
-# a = PyAlice(new_settings="testing/settings", params_alice=params)
-#
-#
-#
-# print(a.logs())
-# print(a.events)
-# print(a.key_word)
-# print(a.default_text)
-# print(a.buttons)
-a = Intents("testing/intents", "из раменского до выхино в 14:00", start_time=datetime.datetime.now())
+a = PyAlice(new_settings="testing/settings", params_alice=params)
 print(a.logs())
-
+print(f"events -> {a.events}")
+print(f"key_words -> {a.key_words}")
+print(f"intents -> {a.intents}")
+print(f"text -> {a.default_text}")
+print(f"buttons -> {a.buttons}")
+settings = {
+    "events": True,
+    "debug": False,
+    "buttons_dialogs_auto": True,
+    "time_zone": None,
+    "text_for_intents": "command",
+    "text_for_key_words": "command",
+    "version": "1.0",
+    "error_dialog": "Я вас не поняла",
+    "dialogs_file": "testing/dialogs",
+    "intents_file": "testing/intents",
+    "key_words_file": "testing/key_word",
+    "buttons_file": "testing/buttons",
+    "const_buttons": None,
+    "language": "ru"
+}
+# a = DateTime("привет я прийду домой без 10 минут 10 часов", settings=settings)
+# print(a.get_data())
+# a = PyAlice()
+# a = Intents(settings, "testing/intents", "из раменского до выхино в 14:00", start_time=datetime.datetime.now())
+# print(a.logs())
+# from pyAlice.testing_fr import fun
+# fun()
 #

@@ -1,5 +1,5 @@
 import json
-from module.errors import KeyWordError
+from pyAlice.errors.base_errors import KeyWordsErrors
 
 
 class KeyWord:
@@ -18,39 +18,42 @@ class KeyWord:
         with open(self.name_file_validate(f"{self.dir}/{self.key_words_file}"), "r") as f:
             key_word_dict = json.loads(f.read())
 
-        key_word_answer = ""
-        events = ""
-        dialogs = ""
-        buttons = []
-
+        answer = ""
+        answer_buttons = []
+        answer_dialog = ""
+        answer_events = []
         for key, value in key_word_dict.items():
-            key_word_list = value["key_word"].split(",")
-            for item in key_word_list:
+            word_from_json = value["key_words"]
+            if word_from_json.isspace() or word_from_json == "":
+                raise KeyWordsErrors("key_wods_empty_error")
+            for item in word_from_json.split(","):
                 if item.strip() in self.text:
-                    key_word_answer += key + " "
-                    events = value["event"]
-                    dialogs = value["dialog"]
-                    buttons.extend(value["buttons"].split(","))
-                    break
-        if key_word_answer == "":
+                    answer += f"{key} "
+                    if value.get("events"):
+                        for item in value.get("events").split(","):
+                            answer_events.append(item.strip())
+                    if value.get("buttons"):
+                        for item in value.get("buttons").split(","):
+                            answer_buttons.append(item.strip())
+                    if value.get("dialog"):
+                        answer_dialog = value["dialog"]
+        if answer == "":
             return False
-        key_word_answer = key_word_answer[:-1] if key_word_answer[-1] == " " else key_word_answer
-        if len(key_word_answer.split(" ")) > 1:
+        answer = answer.strip()
+        if len(answer.split(" ")) > 1:
             return {
-                "key_word": key_word_answer,
-                "event": events,
-                "dialog": dialogs,
-                "buttons": buttons,
+                "key_word": answer,
+                "event": answer_events,
+                "dialog": answer_dialog,
+                "buttons": answer_buttons,
                 "success": False
             }
         else:
-            if len(key_word_answer.split(" ")) < 1:
-                return False
             return {
-                "key_word": key_word_answer,
-                "event": events,
-                "dialog": dialogs,
-                "buttons": buttons,
+                "key_word": answer,
+                "event": answer_events,
+                "dialog": answer_dialog,
+                "buttons": answer_buttons,
                 "success": True
             }
 

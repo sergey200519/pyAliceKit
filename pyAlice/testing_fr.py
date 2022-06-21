@@ -11,23 +11,6 @@ class KeyWordErrorD(Exception):
     pass
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
+def fun():
+    print("ok")
+    raise KeyWordError("error")

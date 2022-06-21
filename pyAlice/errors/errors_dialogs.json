@@ -1,0 +1,15 @@
+{
+  "events_setting_error": "тип даных 'event' должен быть bool",
+  "debug_setting_error": "тип даных 'debug' должен быть bool",
+  "buttons_dialogs_auto_setting_error": "тип даных 'buttons_dialogs_auto' должен быть bool",
+  "time_zone_setting_error": "'time_zone' должен выгледеть так 'UTC+3' или '+3'",
+  "text_for_intents_text_for_key_word_setting_error": "'text_for_intents' и 'text_for_key_words' должен быть равны 'commands' или 'original_utterance'",
+  "find_unclear_setting_error": "Найдена неожидаемая настройка",
+  "language_setting_error": "Язык указан невено",
+  "settings_empty_error": "Настройки пусты",
+
+  "key_wods_empty_error": "поле 'key_wods' в файле 'key_wods.json' пусто",
+
+  "intents_file_empty_error": "файл с интентами пуст",
+  "intents_file_json_error": "синтаксическая ощибка в json файле с интентами"
+}

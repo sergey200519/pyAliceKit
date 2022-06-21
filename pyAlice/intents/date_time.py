@@ -1,9 +1,11 @@
 import datetime
-from module.base import Base
+from pyAlice.base import Base
+from pyAlice.functions import slice_list
+from dateutil.relativedelta import relativedelta
 
 
-words_signal = ["через", "в", "завтра", "полдень", "полночь", "час", "часа",
-                "часов", "полчас", "полчаса", "псле", "минут", "минуты",
+words_signal = ["через", "без", "в", "завтра", "полдень", "полночь",
+                "час", "часа", "часов", "полчас", "полчаса", "минут", "минуты",
                 "один", "одну", "день", "дни", "дней", "дня", "дню",
                 "год", "года", "годы", "неделя", "недели", "неделю"]
 months = {
@@ -25,6 +27,7 @@ months = {
 class DateTime(Base):
     total_answer = {}
     success = False
+    total_success = True
 
     def __init__(self, string, settings, now=datetime.datetime.now(), start=datetime.datetime.now()):
         self.string = string
@@ -36,6 +39,7 @@ class DateTime(Base):
         if self.total_answer:
             self.add_log("finish_datetime_log", correction=f"Время распознавания {str(datetime.datetime.now()- self.now)[5:]}")
         else:
+            self.total_success = False
             self.add_log("finish_datetime_log_error")
 
     def search(self):
@@ -66,18 +70,19 @@ class DateTime(Base):
             i += len(item) + 1
 
     def __date_time(self, string):
+        relative_time = False
         break_status = True
         text = ""
         word_break = ""
         self.success = False
         answer = {
-            "years": "0000",
-            "months": "00",
-            "weeks": "0",
-            "days": "00",
-            "hours": "00",
-            "minutes": "00",
-            "seconds": "00"
+            "years": "",
+            "months": "",
+            "weeks": "",
+            "days": "",
+            "hours": "",
+            "minutes": "",
+            "seconds": ""
         }
 
         def answer_auto_fill(string, n):
@@ -109,6 +114,7 @@ class DateTime(Base):
         string_list = list(filter(None, [item.lower().strip() for item in string.split(" ")]))
         if "через" in string:
             regarding = True
+            relative_time = True
             i = 0
             for item in string_list:
                 if item not in words_signal and not item.isdigit() and item not in "и в":
@@ -128,6 +134,33 @@ class DateTime(Base):
                     if item in "полчас полчаса":
                         answer["minutes"] = 30
                         self.success = True
+                i += 1
+            if break_status:
+                self.add_log("found_regarding_time_log", correction=text)
+        elif "без" in string:
+            regarding = True
+            i = 0
+            for item in string_list:
+                if item not in words_signal and not item.isdigit() and item not in "и в":
+                    word_break = item
+                    break_status = False
+                    self.add_log("found_regarding_time_log", correction=text)
+                    break
+                else:
+                    if item == "без":
+                        if string_list[i + 1].isdigit():
+                            if string_list[i + 2] in "минут минуту минуты минута":
+                                if string_list[i + 3].isdigit():
+                                    text += slice_list(string_list, i, i + 3)
+                                    answer["hours"] = int(string_list[i + 3]) - 1
+                                    answer["minutes"] = 60 - int(string_list[i + 1])
+                                    self.success = True
+                                break
+                            elif string_list[i + 2].isdigit():
+                                text += slice_list(string_list, i, i + 2)
+                                answer["hours"] = int(string_list[i + 2]) - 1
+                                answer["minutes"] = 60 - int(string_list[i + 1])
+                                self.success = True
                 i += 1
             if break_status:
                 self.add_log("found_regarding_time_log", correction=text)
@@ -159,9 +192,9 @@ class DateTime(Base):
                 i += 1
             if break_status:
                 self.add_log("found_time_log", correction=text)
-        print(self.success, answer)
+        # print(self.success, answer)
         return {
-            "value": answer,
+            "value": self.__colect_answer(answer, relative=relative_time),
             "word_break": word_break,
             "success": self.success,
             "text": text
@@ -194,6 +227,46 @@ class DateTime(Base):
             if status:
                 i += 1
                 j += len(item)
+
+    def __colect_answer(self, old_answer, relative=False):
+        if not relative:
+            now = datetime.datetime.now()
+            year, month, week, day, hours, minutes, seconds = now.year, now.month, 0, now.day, now.hour, now.minute, now.second
+            if old_answer["years"] != "":
+                year = int(old_answer["years"])
+            if old_answer["months"] != "":
+                month = int(old_answer["months"])
+            if old_answer["weeks"] != "":
+                day + int(old_answer["weeks"]) * 7
+            if old_answer["days"] != "":
+                day = int(old_answer["days"])
+            if old_answer["hours"] != "":
+                hours = int(old_answer["hours"])
+            if old_answer["minutes"] != "":
+                minutes = int(old_answer["minutes"])
+            if old_answer["seconds"] != "":
+                seconds = int(old_answer["seconds"])
+            date_time = datetime.datetime.strptime(f"{year}-{month}-{day} {hours}:{minutes}:{seconds}", '%Y-%m-%d %H:%M:%S')
+            return date_time
+        elif relative:
+            year, month, week, day, hours, minutes, seconds = 0, 0, 0, 0, 0, 0, 0
+            if old_answer["years"] != "":
+                year = int(old_answer["years"])
+            if old_answer["months"] != "":
+                month = int(old_answer["months"])
+            if old_answer["weeks"] != "":
+                week = int(old_answer["weeks"])
+            if old_answer["days"] != "":
+                day = int(old_answer["days"])
+            if old_answer["hours"] != "":
+                hours = int(old_answer["hours"])
+            if old_answer["minutes"] != "":
+                minutes = int(old_answer["minutes"])
+            if old_answer["seconds"] != "":
+                seconds = int(old_answer["seconds"])
+            new_date_time = datetime.datetime.now() + relativedelta(years=year, months=month, weeks=week, hours=hours, minutes=minutes, seconds=seconds)
+            return new_date_time
+        return False
 
     def get_data(self):
         self.add_log("get_datetime_log")

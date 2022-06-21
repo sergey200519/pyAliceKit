@@ -18,19 +18,28 @@ def open_json_file(name_file):
 
 def new_settings_is_valid(new_settings):
     new_settings = open_json_file(new_settings)
+    keys = ["events", "debug", "buttons_dialogs_auto", "time_zone",
+            "text_for_intents", "text_for_key_words", "version",
+            "error_dialog", "dialogs_file", "intents_file", "key_words_file",
+            "buttons_file", "const_buttons", "language"]
+    for key, value in new_settings.items():
+        if key not in keys:
+            return "find_unclear_setting_error"
     if new_settings.get("events") and type(new_settings.get("events")) != bool:
-        return "events_setting_log_error"
+        return "events_setting_error"
     if new_settings.get("debug") and type(new_settings.get("debug")) != bool:
-        return "debug_setting_log_error"
+        return "debug_setting_error"
     if new_settings.get("buttons_dialogs_auto") and type(new_settings.get("buttons_dialogs_auto")) != bool:
-        return "buttons_dialogs_auto_setting_log_error"
+        return "buttons_dialogs_auto_setting_error"
     if new_settings.get("time_zone") and (new_settings.get("time_zone") == "" or len(new_settings.get("time_zone")) > 5):
-        return "time_zone_setting_log_error"
+        return "time_zone_setting_error"
     # слелать проверку now
     if new_settings.get("text_for_intents") and (new_settings.get("text_for_intents") != "commands" or new_settings.get("text_for_intents") != "original_utterance"):
-        return "text_for_intents_text_for_key_word_setting_log_error"
-    if new_settings.get("text_for_key_word") and (new_settings.get("text_for_key_word") != "commands" or new_settings.get("text_for_intents") != "original_utterance"):
-        return "text_for_intents_text_for_key_word_setting_log_error"
+        return "text_for_intents_text_for_key_word_setting_error"
+    if new_settings.get("text_for_key_words") and (new_settings.get("text_for_key_word") != "commands" or new_settings.get("text_for_intents") != "original_utterance"):
+        return "text_for_intents_text_for_key_word_setting_error"
+    if new_settings.get("language") and len(new_settings.get("language")) < 2:
+        return "language_setting_error"
     return True
 
 
@@ -59,13 +68,36 @@ def other_items_in_list(item, lis):
     return answer
 
 
+def slice_list(list_text, start, end):
+    answer = ""
+    i = 0
+    while i < len(list_text):
+        if i >= start and i <= end:
+            answer += list_text[i] + " "
+        i += 1
+    return answer.strip()
 
 
+def find_str_in_list(list_text, text):
+    n = len(text.split(" "))
+    text = " ".join(text.split()).split(' ')
+    i = 0
+    while i < len(list_text):
+        if list_text[i:i+n] == text:
+            return i
+        i += 1
+    return -1
 
 
+def delete_word_from_list(list, words):
+    return [word for word in list if word.strip().lower() not in words]
 
 
-
+def from_str_to_list_with_strip(text, sign):
+    answer = []
+    for item in text.split(sign):
+        answer.append(item.strip())
+    return answer
 
 
 

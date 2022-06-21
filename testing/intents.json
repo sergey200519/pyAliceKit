@@ -14,12 +14,13 @@
         "mandatory_presence": false
       }
     },
-    "event": "main_intent_event"
+    "events": "main_intent_event",
+    "buttons": "main_intent_button1, main_intent_button2"
   },
   "two": {
     "sections": {
       "hi": {
-        "key_word": "првет",
+        "key_word": "привет, hi",
         "mandatory_presence": true
       },
       "user": {
@@ -31,6 +32,6 @@
         "mandatory_presence": false
       }
     },
-    "event": "two_intent_event"
+    "events": "two_intent_event"
   }
 }

@@ -1,12 +1,16 @@
 import json
 from pyAlice.errors.base_errors import KeyWordsErrors
+from pyAlice.base import Base
 
 
-class KeyWord:
-    def __init__(self, key_words_file, text, dir):
+class KeyWord(Base):
+    def __init__(self, key_words_file, text, dir, settings, start_time):
+        self.start_time = start_time
+        self.settings = settings
         self.key_words_file = key_words_file
         self.text = text
         self.dir = dir
+        self.add_log("key_word_init_log", start_time=self.start_time, type="key_words")
 
     def name_file_validate(self, name):
         if ".json" in name:

@@ -2,13 +2,13 @@
   "commands": {
     "key_words": "команды, помощь",
     "events": "commands_event",
-    "dialog": "Я вам помогу",
+    "dialog": "help",
     "buttons": "full_search, fast_search"
   },
   "functions": {
     "key_words": "функции, fun",
     "events": "functions_event",
-    "dialog": "Функции",
+    "dialog": " functions",
     "buttons": "help"
   }
 }

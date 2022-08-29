@@ -1,15 +1,24 @@
-import datetime
-from dateutil.relativedelta import relativedelta
-a = datetime.datetime.now()
-print(a.year, type(a.year))
-
-date_time_str = '2018-06-29 08:15:27.243860'
-date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f')
-new = date_time_obj + relativedelta(years=1)
-print(date_time_obj.year, "-", new, "-", type(new))
-
-
-
+a = ["button1", "button2"]
+b = ["button3", "button4", "button5", "button6", "button7"]
+def view_buttons(buttons):
+        first_buttons = buttons[0]
+        last_buttons = buttons[1]
+        for item in first_buttons:
+            print("_" * 40)
+            print(item)
+        print("_" * 40)
+        last_buttons_text1 = ""
+        last_buttons_text2 = ""
+        last_buttons_text3 = ""
+        for item in last_buttons:
+            n = len(item)
+            last_buttons_text1 += " " + "_" * (n + 2) + " "
+            last_buttons_text2 += f" |{item}| "
+            last_buttons_text3 += " " + "‾" * (n + 2) + " "
+        print(last_buttons_text1)
+        print(last_buttons_text2)
+        print(last_buttons_text3)
+view_buttons([a, b])
 
 
 

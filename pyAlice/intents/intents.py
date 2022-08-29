@@ -34,13 +34,13 @@ class Intents(Base):
                 raise IntentsErrors("intents_file_empty_error")
         except json.decoder.JSONDecodeError as error:
             raise IntentsErrors("intents_file_json_error")
-
         self.text = text
         self.list_text = [item.strip() for item in text.split(" ")]
         self.start_time = start_time
-        self.add_log("init_intents_log", start_time=self.start_time)
+        self.add_log("init_intents_log", start_time=self.start_time, type="intents")
         self.status_special_type = self.check_special_type()
         self.__separation_intents()
+        self.add_log("intents_finish_log", start_time=self.start_time, type="intents")
 
     def check_special_type(self):
         for item in special_type:
@@ -51,7 +51,8 @@ class Intents(Base):
 
     def __separation_intents(self):
         if "$DATETIME" in str(self.intents):
-            date_time = DateTime(self.text, self.settings, start=self.start_time)
+            self.add_log("intents_found_datatime_log", start_time=self.start_time, type="intents")
+            date_time = DateTime(self.text, self.settings, start_time=self.start_time)
             if date_time.total_success:
                 date_time_in_text = date_time.get_data()
                 for key, value in date_time_in_text.items():
@@ -60,7 +61,7 @@ class Intents(Base):
                     self.date_time_key.append(date_key)
                     self.date_time_data[date_key] = value.get("time")
         for key, value in self.intents.items():
-            result = self.intent(value.get("sections"))
+            result = self.intent(value.get("sections"), key)
             if result != False:
                 self.answer[key] = result
                 events = value.get("events")
@@ -68,7 +69,8 @@ class Intents(Base):
                 buttons = value.get("buttons")
                 self.buttons.extend(from_str_to_list_with_strip(buttons, ",") if buttons is not None else False)
 
-    def intent(self, intent):
+    def intent(self, intent, name):
+        self.add_log("intents_processing_intent_log", start_time=self.start_time, correction=name, type="intents")
         answer = {}
         start_words = []
         start_words_for_intent = {}
@@ -132,7 +134,10 @@ class Intents(Base):
         for item in required_field:
             if item not in answer.keys():
                 answer = False
+                self.add_log("intents_processing_error_log", start_time=self.start_time, type="intents")
                 break
+        if answer is not False:
+            self.add_log("intents_processing_successfully_log", start_time=self.start_time, type="intents")
         # print(answer, "<------------------ ответ")
         return answer
 

@@ -29,21 +29,21 @@ class DateTime(Base):
     success = False
     total_success = True
 
-    def __init__(self, string, settings, now=datetime.datetime.now(), start=datetime.datetime.now()):
+    def __init__(self, string, settings, now=datetime.datetime.now(), start_time=datetime.datetime.now()):
         self.string = string
-        self.start = start
+        self.start_time = start_time
         self.now = now
         self.settings = settings
-        self.add_log("init_datetime_log")
+        self.add_log("init_datetime_log", start_time=self.start_time, type="date_time")
         self.search()
         if self.total_answer:
-            self.add_log("finish_datetime_log", correction=f"Время распознавания {str(datetime.datetime.now()- self.now)[5:]}")
+            self.add_log("finish_datetime_log", start_time=self.start_time, correction=f"Время распознавания {str(datetime.datetime.now()- self.now)[5:]}", type="date_time")
         else:
             self.total_success = False
-            self.add_log("finish_datetime_log_error")
+            self.add_log("finish_datetime_log_error", start_time=self.start_time, type="error")
 
     def search(self):
-        self.add_log("search_datetime_log")
+        self.add_log("search_datetime_log", start_time=self.start_time, type="date_time")
         i = 0
         j = 0
         for item in self.string.split(" "):
@@ -120,7 +120,7 @@ class DateTime(Base):
                 if item not in words_signal and not item.isdigit() and item not in "и в":
                     word_break = item
                     break_status = False
-                    self.add_log("found_regarding_time_log", correction=text)
+                    self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text, type="date_time")
                     break
                 else:
                     text += item + " "
@@ -136,7 +136,7 @@ class DateTime(Base):
                         self.success = True
                 i += 1
             if break_status:
-                self.add_log("found_regarding_time_log", correction=text)
+                self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text, type="date_time")
         elif "без" in string:
             regarding = True
             i = 0
@@ -144,7 +144,7 @@ class DateTime(Base):
                 if item not in words_signal and not item.isdigit() and item not in "и в":
                     word_break = item
                     break_status = False
-                    self.add_log("found_regarding_time_log", correction=text)
+                    self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text, type="date_time")
                     break
                 else:
                     if item == "без":
@@ -163,14 +163,14 @@ class DateTime(Base):
                                 self.success = True
                 i += 1
             if break_status:
-                self.add_log("found_regarding_time_log", correction=text)
+                self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text, type="date_time")
         else:
             i = 0
             for item in string_list:
                 if item not in words_signal and not item.isdigit() and item not in "и в" and not self.is_month(item) and not ":" in item:
                     word_break = item
                     break_status = False
-                    self.add_log("found_time_log", correction=text)
+                    self.add_log("found_time_log", start_time=self.start_time, correction=text, type="date_time")
                     break
                 else:
                     text += item + " "
@@ -191,7 +191,7 @@ class DateTime(Base):
                         self.success = True
                 i += 1
             if break_status:
-                self.add_log("found_time_log", correction=text)
+                self.add_log("found_time_log", start_time=self.start_time, correction=text, type="date_time")
         # print(self.success, answer)
         return {
             "value": self.__colect_answer(answer, relative=relative_time),
@@ -269,7 +269,7 @@ class DateTime(Base):
         return False
 
     def get_data(self):
-        self.add_log("get_datetime_log")
+        self.add_log("get_datetime_log", start_time=self.start_time, type="date_time")
         return self.total_answer
 
 

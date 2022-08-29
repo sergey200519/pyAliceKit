@@ -1,4 +1,18 @@
 {
+  "commands": {
+      "title": "Команды",
+      "payload": {
+          "title": "commands"
+      },
+      "hide": "true"
+  },
+  "possibility": {
+      "title": "Возможности",
+      "payload": {
+          "title": "func"
+      },
+      "hide": "true"
+  },
   "full_search": {
     "title": "Подробный поиск",
     "hide": "false"

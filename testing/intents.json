@@ -15,7 +15,7 @@
       }
     },
     "events": "main_intent_event",
-    "buttons": "main_intent_button1, main_intent_button2"
+    "buttons": "help, possibility"
   },
   "two": {
     "sections": {

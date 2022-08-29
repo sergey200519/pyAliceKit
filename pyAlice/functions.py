@@ -1,6 +1,8 @@
 import pathlib
 import json
 
+from pyAlice.errors.base_errors import DialogsErrors
+
 
 MAIN_DIR = pathlib.Path.cwd()
 
@@ -21,7 +23,7 @@ def new_settings_is_valid(new_settings):
     keys = ["events", "debug", "buttons_dialogs_auto", "time_zone",
             "text_for_intents", "text_for_key_words", "version",
             "error_dialog", "dialogs_file", "intents_file", "key_words_file",
-            "buttons_file", "const_buttons", "language"]
+            "buttons_file", "const_buttons", "language", "starting_dialog", "source_text"]
     for key, value in new_settings.items():
         if key not in keys:
             return "find_unclear_setting_error"
@@ -40,6 +42,10 @@ def new_settings_is_valid(new_settings):
         return "text_for_intents_text_for_key_word_setting_error"
     if new_settings.get("language") and len(new_settings.get("language")) < 2:
         return "language_setting_error"
+    if new_settings.get("starting_dialog") is None:
+        return "starting_dialog_setting_error"
+    if new_settings.get("source_text") is None and (new_settings.get("source_text") != "commands" or new_settings.get("source_text") != "original_utterance"):
+        return "source_text_setting_error"
     return True
 
 
@@ -54,7 +60,7 @@ def get_buttons(buttons, buttons_file):
     buttons_dict = open_json_file(buttons_file)
     answer = []
     for item in buttons:
-        if buttons_dict.get(item.strip()) == None:
+        if buttons_dict.get(item.strip()) is None:
             return False
         answer.append(buttons_dict.get(item.strip()))
     return answer
@@ -100,13 +106,11 @@ def from_str_to_list_with_strip(text, sign):
     return answer
 
 
-
-
-
-
-
-
-
+def get_dialog(dialogs, name):
+    dialog = dialogs.get(name.strip())
+    if dialog is None:
+        raise DialogsErrors("dialog_not_found_error", context=name)
+    return dialog.get("value")
 
 
 #

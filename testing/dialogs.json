@@ -1,5 +1,5 @@
 {
-  "autification": {
+  "start": {
     "value": "Привет! Это навык для поиска электричек по Москве и области. Для большей информации скажите 'Возможности' или 'Команды'.",
     "events": false
   },
@@ -8,7 +8,11 @@
     "events": false
   },
   "help": {
-    "value": "help",
+    "value": "Я вам помогу",
     "events": "commands_event"
+  },
+  "functions": {
+    "value": "Функции диалог",
+    "events": false
   }
 }

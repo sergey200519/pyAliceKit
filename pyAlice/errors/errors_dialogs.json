@@ -1,4 +1,6 @@
 {
+  "color_logs_error": "метод add_log() принимает либо color либо type",
+
   "events_setting_error": "тип даных 'event' должен быть bool",
   "debug_setting_error": "тип даных 'debug' должен быть bool",
   "buttons_dialogs_auto_setting_error": "тип даных 'buttons_dialogs_auto' должен быть bool",
@@ -6,10 +8,16 @@
   "text_for_intents_text_for_key_word_setting_error": "'text_for_intents' и 'text_for_key_words' должен быть равны 'commands' или 'original_utterance'",
   "find_unclear_setting_error": "Найдена неожидаемая настройка",
   "language_setting_error": "Язык указан невено",
+  "starting_dialog_setting_error": "Стартовая фраза не указана",
+  "source_text_setting_error": "'source_text' должен быть равным 'commands' или 'original_utterance'",
   "settings_empty_error": "Настройки пусты",
 
   "key_wods_empty_error": "поле 'key_wods' в файле 'key_wods.json' пусто",
 
   "intents_file_empty_error": "файл с интентами пуст",
-  "intents_file_json_error": "синтаксическая ощибка в json файле с интентами"
+  "intents_file_json_error": "синтаксическая ощибка в json файле с интентами",
+
+  "dialog_not_found_error": "Диалога с ключом {} не найден",
+
+  "get_params_type_error": "Атрибут type в методы get_params должен быть равен либо 'json' либо 'dict'"
 }

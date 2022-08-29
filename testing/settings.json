@@ -1,7 +1,10 @@
 {
-  "dialogs_file": "dialogs",
+  "dialogs_file": "testing/dialogs",
   "intents_file": "testing/intents",
   "key_words_file": "testing/key_word",
   "buttons_file": "testing/buttons",
-  "language": "ru"
+  "language": "ru",
+  "const_buttons": "commands, possibility",
+  "starting_dialog": "start",
+  "source_text": "command"
 }

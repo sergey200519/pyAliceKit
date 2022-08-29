@@ -33,7 +33,7 @@ params = {
     "new": False
   },
   "request": {
-    "command": "из раменского до выхино 15 мая 2022 года",
+    "command": "помощь из раменского до выхино 15 мая 2022 года",
     "original_utterance": "алиса нужно твоя помощь",
     "nlu": {
       "tokens": [
@@ -65,13 +65,14 @@ params = {
 # with open("testing/settings.json", "r") as f:
 #     settings = json.loads(f.read())
 # print(settings)
-a = PyAlice(new_settings="testing/settings", params_alice=params)
-print(a.logs())
-print(f"events -> {a.events}")
-print(f"key_words -> {a.key_words}")
-print(f"intents -> {a.intents}")
-print(f"text -> {a.default_text}")
-print(f"buttons -> {a.buttons}")
+start = datetime.datetime.now()
+# a = PyAlice(new_settings="testing/settings", params_alice=params).get_params()
+# print(a)
+# print(f"events -> {a.events}")
+# print(f"key_words -> {a.key_words}")
+# print(f"intents -> {a.intents}")
+# print(f"text -> {a.default_text}")
+# print(f"buttons -> {a.buttons}")
 settings = {
     "events": True,
     "debug": False,
@@ -95,4 +96,13 @@ settings = {
 # print(a.logs())
 # from pyAlice.testing_fr import fun
 # fun()
-#
+
+
+def handler(event, context=""):
+    a = PyAlice(new_settings="testing/settings", params_alice=event)
+    a = a.get_params(text=a.text)
+    # print(f"event text ---> {event['request']['command']}")
+    # print(f"response text ---> {a['response']['text']}")
+    # exit(1)
+    # a["response"]["text"] = event["request"]["command"]
+    return a

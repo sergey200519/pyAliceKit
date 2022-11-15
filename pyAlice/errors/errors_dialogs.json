@@ -12,6 +12,9 @@
   "source_text_setting_error": "'source_text' должен быть равным 'commands' или 'original_utterance'",
   "settings_empty_error": "Настройки пусты",
 
+  "update_storage_error": "Обнавление элемента storage с ключом '{}' невозможно так как такого ключа нет",
+  "add_storage_update_error": "Добавить элемент с ключом '{}' невозможно так как он уже существует и аргумент 'update' равен False",
+
   "key_wods_empty_error": "поле 'key_wods' в файле 'key_wods.json' пусто",
 
   "intents_file_empty_error": "файл с интентами пуст",

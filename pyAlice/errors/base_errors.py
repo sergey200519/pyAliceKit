@@ -33,6 +33,11 @@ class SettingsEroors(BaseErrors):
         return f"Settings Error: {self.get_dialog(self.msg)}"
 
 
+class StorageEroors(BaseErrors):
+    def __str__(self):
+        return f"Storage Error: {self.get_dialog(self.msg).format(self.context)}"
+
+
 class KeyWordsErrors(BaseErrors):
     def __str__(self):
         return f"Key words Error: {self.get_dialog(self.msg)}"

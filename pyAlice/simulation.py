@@ -1,3 +1,4 @@
+import os
 import json
 from index import handler
 import datetime
@@ -168,10 +169,20 @@ class Simulation:
         new = True
         while True:
             if new:
+                start = datetime.datetime.now()
                 data = json.loads(handler(req))
+                end = datetime.datetime.now() - start
                 self.get_text(data)
                 buttons = self.get_buttons(data)
                 self.view_buttons(buttons)
+                status = ""
+                if end.seconds < 1:
+                    status = "Отлично"
+                if end.seconds > 1 and end.seconds < 2:
+                    status = "Хорошо"
+                if end.seconds > 3:
+                    status = "Очень плохо"
+                print(f"Время отклика {end.seconds} секунд и {end.microseconds} милисекунд. {status}")
                 # alice_params = req
                 # input_text = input()
                 # alice_params["request"]["command"] = input_text
@@ -183,6 +194,7 @@ class Simulation:
                 new = False
                 continue
             input_text = input()
+            os.system('cls' if os.name == 'nt' else 'clear')
             if input_text == "q" or input_text == "finish" or input_text == "exit" or input_text == "end":
                 break
             alice_params = req2

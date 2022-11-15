@@ -5,7 +5,7 @@ import pathlib
 from pyAlice.functions import distribution_of_settings, get_buttons, open_json_file, new_settings_is_valid, get_dialog
 from pyAlice.key_word import KeyWord
 from pyAlice.intents.intents import Intents
-from pyAlice.errors.base_errors import SettingsEroors, KeyWordsErrors, IntentsErrors, PyAliceErrors
+from pyAlice.errors.base_errors import SettingsEroors, StorageEroors, KeyWordsErrors, IntentsErrors, PyAliceErrors
 from pyAlice.base import Base
 
 
@@ -48,6 +48,10 @@ class PyAlice(Base):
 
     def __init__(self, params_alice, new_settings=None, now=None):
         self.buttons = []
+        self.events = []
+        self.key_words = ""
+        self.storage = params_alice.get("state").get("session")
+        self.intents = {}
         if open_json_file(new_settings) == {}:
             raise SettingsEroors("settings_empty_error")
         self.time_start_working = datetime.datetime.now()
@@ -94,28 +98,28 @@ class PyAlice(Base):
     def __processing_params(self):
         if self.__is_text_in_params():
             text = self.params_alice["request"]
-            # try:
-            key_word = KeyWord(self.settings.get("key_words_file"), text.get(self.settings.get("text_for_key_words")), MAIN_DIR, settings=self.settings, start_time=self.time_start_working).key_word()
-            if key_word:
-                if not key_word.get("success"):
-                    self.events.append("DuplicateKeyWordEvent")
-                    self.add_log("key_word_duplicate_log", start_time=self.time_start_working, type="error")
+            try:
+                key_word = KeyWord(self.settings.get("key_words_file"), text.get(self.settings.get("text_for_key_words")), MAIN_DIR, settings=self.settings, start_time=self.time_start_working).key_word()
+                if key_word:
+                    if not key_word.get("success"):
+                        self.events.append("DuplicateKeyWordEvent")
+                        self.add_log("key_word_duplicate_log", start_time=self.time_start_working, type="error")
 
+                    else:
+                        if key_word.get("event") != []:
+                            self.events.extend(key_word.get("event"))
+                        if key_word.get("dialog") != "":
+                            self.default_text = get_dialog(self.dialogs, key_word.get('dialog'))
+                        if key_word.get("buttons") != []:
+                            self.buttons.extend(key_word.get("buttons"))
+                        self.key_words = key_word.get("key_word")
+                        self.add_log("key_word_log", start_time=self.time_start_working, type="key_words")
                 else:
-                    if key_word.get("event") != []:
-                        self.events.extend(key_word.get("event"))
-                    if key_word.get("dialog") != "":
-                        self.default_text = get_dialog(self.dialogs, key_word.get('dialog'))
-                    if key_word.get("buttons") != []:
-                        self.buttons.extend(key_word.get("buttons"))
-                    self.key_words = key_word.get("key_word")
-                    self.add_log("key_word_log", start_time=self.time_start_working, type="key_words")
-            else:
-                self.add_log("key_word_not_found_log", start_time=self.time_start_working, type="key_words")
-            # except KeyWordsErrors as exc:
-            #     raise
-            # except Exception:
-            #     self.add_log("key_word_log_error", start_time=self.time_start_working, type="error")
+                    self.add_log("key_word_not_found_log", start_time=self.time_start_working, type="key_words")
+            except KeyWordsErrors as exc:
+                raise
+            except Exception:
+                self.add_log("key_word_log_error", start_time=self.time_start_working, type="error")
             try:
                 intents = Intents(self.settings, self.settings.get("intents_file"), text.get(self.settings.get("text_for_intents")), start_time=self.time_start_working).get_intents_data()
                 if intents["events"]:
@@ -129,6 +133,45 @@ class PyAlice(Base):
                 raise
         else:
             self.add_log("not_text_log")
+
+    # gets
+
+    def get_events(self):
+        self.add_log("get_events_log", start_time=self.time_start_working, type="main")
+        return self.events
+
+    def get_buttons(self):
+        self.add_log("get_buttons_log", start_time=self.time_start_working, type="main")
+        return self.buttons
+
+    def get_key_words(self):
+        self.add_log("get_key_words_log", start_time=self.time_start_working, type="main")
+        return self.key_words
+
+    def get_intents(self):
+        self.add_log("get_intents_log", start_time=self.time_start_working, type="main")
+        return self.intents
+
+    # storage
+
+    def get_storage(self):
+        self.add_log("get_storage_log", start_time=self.time_start_working, color="blue")
+        return self.storage
+
+    def update_storage(self, key, new_value):
+        if self.storage.get(key) is None:
+            raise StorageEroors("update_storage_error", context=key)
+        self.storage[key] = new_value
+        self.add_log("update_storage_log", start_time=self.time_start_working, color="blue")
+
+    def add_storage(self, key, value, update=False):
+        if self.storage.get(key) is not None and update:
+            self.storage[key] = value
+            self.add_log("update_in_add_storage_log", start_time=self.time_start_working, color="blue")
+        elif self.storage.get(key) is not None:
+            raise StorageEroors("add_storage_update_error", context=key)
+        self.storage[key] = value
+        self.add_log("add_storage_log", start_time=self.time_start_working, color="blue")
 
     def get_params(self, text=None, end_session=False, type="json"):
         types = ["json", "dict"]

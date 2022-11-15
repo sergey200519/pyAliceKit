@@ -100,9 +100,15 @@ settings = {
 
 def handler(event, context=""):
     a = PyAlice(new_settings="testing/settings", params_alice=event)
+    events = a.get_events()
+    buttons = a.get_buttons()
+    key_words = a.get_key_words()
+    intents = a.get_intents()
+    print(f"events ---> {events}")
+    print(f"buttons ---> {buttons}")
+    print(f"key_words ---> {key_words}")
+    print(f"intents ---> {intents}")
     a = a.get_params(text=a.text)
-    # print(f"event text ---> {event['request']['command']}")
     # print(f"response text ---> {a['response']['text']}")
-    # exit(1)
     # a["response"]["text"] = event["request"]["command"]
     return a

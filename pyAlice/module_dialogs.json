@@ -2,6 +2,15 @@
   "configuration_options_log": "Настройки успешно были записаны",
   "configuration_options_not_change_log": "Новых настроек не постуало, поэтому класс работает на настройках по умолчанию",
 
+  "get_events_log": "GET: Запрос на получение 'events'",
+  "get_buttons_log": "GET: Запрос на получение 'buttons'",
+  "get_key_words_log": "GET: Запрос на получение 'key_words'",
+  "get_intents_log": "GET: Запрос на получение 'intents'",
+  "get_storage_log": "GET: Запрос на получение 'storage'",
+  "add_storage_log": "Запрос на добавление в 'storage'",
+  "update_storage_log": "Запрос на обнавление элемента 'storage'",
+  "update_in_add_storage_log": "Запрос на обнавление элемента 'storage' из метада 'add_storage()'",
+
   "key_word_init_log": "Класс по поиску ключевых слов был проинициолизирован",
   "key_word_log": "Поиск по ключевым словам прошол успешно",
   "key_word_not_found_log": "Поиск по ключевым словам ничего не нашол",

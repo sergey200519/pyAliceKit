@@ -34,16 +34,16 @@ class DateTime(Base):
         self.start_time = start_time
         self.now = now
         self.settings = settings
-        self.add_log("init_datetime_log", start_time=self.start_time, type="date_time")
+        self.add_log("init_datetime_log", start_time=self.start_time)
         self.search()
         if self.total_answer:
-            self.add_log("finish_datetime_log", start_time=self.start_time, correction=f"Время распознавания {str(datetime.datetime.now()- self.now)[5:]}", type="date_time")
+            self.add_log("finish_datetime_log", start_time=self.start_time, correction=f"Время распознавания {str(datetime.datetime.now()- self.now)[5:]}")
         else:
             self.total_success = False
-            self.add_log("finish_datetime_log_error", start_time=self.start_time, type="error")
+            self.add_log("finish_datetime_log_error", start_time=self.start_time)
 
     def search(self):
-        self.add_log("search_datetime_log", start_time=self.start_time, type="date_time")
+        self.add_log("search_datetime_log", start_time=self.start_time)
         i = 0
         j = 0
         for item in self.string.split(" "):
@@ -56,7 +56,7 @@ class DateTime(Base):
                 res = self.__date_time(self.string[self.string.find(item, i):])
                 # print(f"res -> {res}, item -> {item}")
                 if res["success"]:
-                    self.total_answer[i] = {
+                    self.total_answer = {
                         "time": res["value"],
                         "text": res["text"]
                         }
@@ -120,7 +120,7 @@ class DateTime(Base):
                 if item not in words_signal and not item.isdigit() and item not in "и в":
                     word_break = item
                     break_status = False
-                    self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text, type="date_time")
+                    self.add_log("found_regarding_time_log", start_time=self.start_time, correction=text)
                     break
                 else:
                     text += item + " "
@@ -170,7 +170,7 @@ class DateTime(Base):
                 if item not in words_signal and not item.isdigit() and item not in "и в" and not self.is_month(item) and not ":" in item:
                     word_break = item
                     break_status = False
-                    self.add_log("found_time_log", start_time=self.start_time, correction=text, type="date_time")
+                    self.add_log("found_time_log", start_time=self.start_time, correction=text)
                     break
                 else:
                     text += item + " "
@@ -269,22 +269,11 @@ class DateTime(Base):
         return False
 
     def get_data(self):
-        self.add_log("get_datetime_log", start_time=self.start_time, type="date_time")
+        self.add_log("get_datetime_log", start_time=self.start_time)
         return self.total_answer
+# '_'
 
 
-
-
-
-
-
-
-
-
-
-
-
-#
 if __name__ == '__main__':
     a = "из раменского 27 мая в 14:34 до выхино"
     # a = "привет я буду 27 мая 2020 года в 15:44 дома и в 17:55"

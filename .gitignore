@@ -1,4 +1,12 @@
 .DS_Store
 __pycache__/
 plans/
+testing/
 test.py
+simulation_test.py
+index.py
+venv/
+modules/
+main.py
+settings.py
+.vscode/

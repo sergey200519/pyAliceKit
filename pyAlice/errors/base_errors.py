@@ -1,28 +1,15 @@
-import pathlib
-import json
-
-MAIN_DIR = pathlib.Path.cwd()
-
-with open(f"{MAIN_DIR}/pyAlice/errors/errors_dialogs.json", "r") as f:
-    errors_dialogs_json = json.loads(f.read())
-
-with open(f"{MAIN_DIR}/pyAlice/module_dialogs.json", "r") as f:
-    module_dialogs_json = json.loads(f.read())
+from pyAlice.messages.errors_message import EMBEDDED_ERRORS_MESSAGE
 
 
 class BaseErrors(Exception):
-    def __init__(self, text, context=None, *args, **kwargs):
+    def __init__(self, text, context=None, language="en", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.msg = text
         self.context = context
+        self.language = language
 
     def get_dialog(self, key):
-        if "$" in key:
-            return module_dialogs_json.get(key.replace("$", ""))
-        elif "#" in key:
-            return key.replace("#", "")
-        else:
-            return errors_dialogs_json.get(key)
+        return EMBEDDED_ERRORS_MESSAGE.get(f"{key}-{self.language}")
 
     def __str__(self):
         return f"Base Error: {self.get_dialog(self.msg)}"
@@ -43,7 +30,7 @@ class IntentsErrors(BaseErrors):
         return f"Intents Error: {self.get_dialog(self.msg)}"
 
 
-class DialogsErrors(BaseErrors):
+class MessageErrors(BaseErrors):
     def __str__(self):
         return f"Dialogs Error: {self.get_dialog(self.msg).format(self.context)}"
 

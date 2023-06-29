@@ -1,10 +1,21 @@
 import datetime
+from pyAlice.base import Base
 
 
-words_signal = ["через", "в", "завтра", "полдень", "полночь", "час", "часа",
-                "часов", "полчас", "полчаса", "псле", "минут", "минуты",
+words_signal = ["через", "без", "в", "завтра", "полдень", "полночь",
+                "час", "часа", "часов", "полчас", "полчаса", "минут", "минуты",
                 "один", "одну", "день", "дни", "дней", "дня", "дню",
-                "год", "года", "годы"]
+                "год", "года", "годы", "неделя", "недели", "неделю"]
+
+relative_word = ["через", "без"]
+
+date_time_word = ["завтра", "полдень", "полночь", "час", "часа", "часов",
+                  "полчас", "полчаса", "минут", "минуты",
+                  "день", "дни", "дней", "дня", "дню",
+                  "год", "года", "годы", "неделя", "недели", "неделю",
+                  "январь", "января", "февраль", "фнвраля", "март", "марта",
+                  "апрель", "апреля", "ноябрь", "ноября"]
+
 months = {
     "январь января": "01",
     "февраль фнвраля": "02",
@@ -21,166 +32,80 @@ months = {
 }
 
 
-class DateTime:
-    total_answer = {}
-    def __init__(self, string, now=datetime.datetime.now(), start=datetime.datetime.now()):
+class DateTime(Base):
+    def __init__(self, string, settings, now=datetime.datetime.now(), start_time=datetime.datetime.now().time()):
         self.string = string
-        self.start = start
+        self.settings = settings
         self.now = now
-        self.search()
+        self.start_time = start_time
+        self.result = {}
+        self.count_result = 0
+
+    def __is_signal(self, word):
+        if ":" in word and word.replace(":", "").isdigit():
+            return True
+        elif word in words_signal or word.isdigit():
+            return True
+        else:
+            return False
 
     def search(self):
+        list_string = self.string.split(" ")
+        flag = False
         i = 0
-        j = 0
-        print(self.string, self.string.split(" "))
-        for item in self.string.split(" "):
-            if j > 0:
-                j -= 1
-                continue
-            if item.lower().strip() in words_signal or ":" in item.lower().strip() or item.strip().isdigit():
-                if len(item) > 1 and "в" in item:
-                    continue
-                print(self.string[i:])
-                res = self.__date_time(self.string[self.string.find(item, i):])
-                self.total_answer[item] = res
-                if res["success"]:
-                    j = self.n_continue(self.string, item, res["word_break"])
-                    j = j if j != None else 0
-                    print(j, item, res["word_break"])
-            i += len(item) + 1
+        while i < len(list_string):
+            word = list_string[i]
+            if self.__is_signal(word):
+                if word in relative_word:
+                    print(f"rel {word}")
+                elif ":" in word and word.replace(":", "").isdigit():
+                    time = word.split(":")
+                    self.result[self.count_result] = {
+                        "date_time": self.create_date_time(hour=time[0], minute=time[1]),
+                        "text": word
+                    }
+                elif word.isdigit():
+                    j = i
+                    answer = {
+                        "years": "",
+                        "months": "",
+                        "weeks": "",
+                        "days": "",
+                        "hours": "",
+                        "minutes": "",
+                        "seconds": ""
+                    }
+                    while True:
+                        if j + 1 == len(list_string):
+                            break
+                        if list_string[j].isdigit() and list_string[j + 1] in date_time_word:
+                            if list_string[j + 1] in "год годы года":
+                                answer["years"] = int(list_string[j])
+                            elif list_string[j + 1] in "месяц месяца месяцы":
+                                answer["months"] = int(list_string[j])
+                            elif list_string[j + 1] in "неделю недели недель":
+                                answer["weeks"] = int(list_string[j])
+                            elif list_string[j + 1] in "день дня дней":
+                                answer["days"] = int(list_string[j])
+                            elif list_string[j + 1] in "часа час часы часов":
+                                answer["hours"] = int(list_string[j])
+                            elif list_string[j + 1] in "минут минуты мин":
+                                answer["minutes"] = int(list_string[j])
+                            elif list_string[j + 1] in "секунду седунды сек":
+                                answer["seconds"] = int(list_string[j])
+                        if list_string[j] in words_signal:
+                            j += 1
+                            continue
+                        else:
+                            break
+                        j += 1
+                    i = j
+                    print(answer)
+            i += 1
 
-    def __date_time(self, string):
-        word_break = ""
-        success = False
-        answer = {
-            "years": "0000",
-            "months": "00",
-            "weeks": "0",
-            "days": "00",
-            "hours": "00",
-            "minutes": "00",
-            "seconds": "00"
-        }
-
-        def answer_auto_fill(string, n):
-            success = True
-            if string in "год годы года":
-                answer["years"] = n
-            elif string in "месяц месяца месяцы":
-                answer["months"] = n
-            elif string in "неделю недели недель":
-                answer["weeks"] = n
-            elif string in "день дня дней":
-                answer["days"] = n
-            elif string in "часа час часы часов":
-                answer["hours"] = n
-            elif string in "минут минуты мин":
-                answer["minutes"] = n
-            elif string in "секунду седунды сек":
-                answer["seconds"] = n
-            else:
-                success = False
-            for key, value in months.items():
-                if string in key:
-                    answer["months"] = value
-                    answer["days"] = n
-                    success = True
-                    break
-
-        regarding = False
-        string_list = list(filter(None, [item.lower().strip() for item in string.split(" ")]))
-        if "через" in string:
-            regarding = True
-            i = 0
-            for item in string_list:
-                if item not in words_signal and not item.isdigit() and item not in "и в":
-                    word_break = item
-                    break
-                else:
-                    if item == "час":
-                        answer["hours"] = 1
-                        success = True
-                    if item.isdigit():
-                        answer_auto_fill(string_list[i + 1], item)
-                    if item in "один одну":
-                        answer_auto_fill(string_list[i + 1], 1)
-                    if item in "полчас полчаса":
-                        answer["minutes"] = 30
-                        success = True
-                i += 1
-        else:
-            i = 0
-            print(string_list)
-            for item in string_list:
-                if item not in words_signal and not item.isdigit() and item not in "и в" and not self.is_month(item) and not ":" in item:
-                    word_break = item
-                    print(item)
-                    break
-                else:
-                    if ":" in item and len(item) <= 5:
-                        time = self.recognize_time(item)
-                        answer["hours"] = time["hours"]
-                        answer["minutes"] = time["minutes"]
-                        success = True
-                    if item.isdigit():
-                        answer_auto_fill(string_list[i + 1], item)
-                    if item in "один одну":
-                        answer_auto_fill(string_list[i + 1], 1)
-                    if item in "полдень":
-                        answer["hours"] = "12"
-                        success = True
-                    if item in "полночь":
-                        answer["hours"] = "00"
-                        success = True
-                i += 1
-        print(success)
-        return {
-            "value": answer,
-            "word_break": word_break,
-            "success": success
-        }
-
-    def recognize_time(self, string):
-        time = string.split(":")
-        return {
-            "hours": time[0],
-            "minutes": time[1]
-        }
-
-    def is_month(self, string):
-        for key, value in months.items():
-            if string.lower().strip() in key:
-                return True
-        return False
-
-    def n_continue(self, string, this_word, need_word):
-        i = 0
-        status = False
-        for item in string.split(" "):
-            if item == this_word:
-                status = True
-            if item == need_word:
-                status = False
-                return i
-            if status:
-                i += 1
+    def create_date_time(self, year=datetime.datetime.now().year, month=datetime.datetime.now().month, day=datetime.datetime.now().day, hour=datetime.datetime.now().hour, minute=datetime.datetime.now().minute, second=datetime.datetime.now().second, microsecond=datetime.datetime.now().microsecond):
+        print(year, type(year))
+        return datetime.datetime(year=int(year), month=int(month), day=int(day), hour=int(hour), minute=int(minute), second=int(second), microsecond=int(microsecond))
 
 
-
-
-
-
-
-
-
-
-
-
-
-#
-if __name__ == '__main__':
-    # a = "из раменского 27 мая в 14:34 до выхино"
-    # a = "привет я буду 27 мая 2020 года в 15:44 дома"
-    a = "привет я пришол в гости в 19:44"
-    # a = "я через 2 недели буду   дома"
-    b = DateTime(a)
+# '_'

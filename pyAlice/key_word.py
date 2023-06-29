@@ -1,65 +1,39 @@
-import json
 from pyAlice.errors.base_errors import KeyWordsErrors
 from pyAlice.base import Base
 
 
 class KeyWord(Base):
-    def __init__(self, key_words_file, text, dir, settings, start_time):
+    def __init__(self, text, settings, start_time):
         self.start_time = start_time
         self.settings = settings
-        self.key_words_file = key_words_file
+        self.key_words = settings.KEY_WORD
         self.text = text
-        self.dir = dir
-        self.add_log("key_word_init_log", start_time=self.start_time, type="key_words")
-
-    def name_file_validate(self, name):
-        if ".json" in name:
-            return name
-        else:
-            return f"{name.strip()}.json"
+        self.add_log("key_word_init_log", color="green", start_time=self.start_time)
 
     def key_word(self):
-        with open(self.name_file_validate(f"{self.dir}/{self.key_words_file}"), "r") as f:
-            key_word_dict = json.loads(f.read())
-
+        flag = False
         answer = ""
         answer_buttons = []
-        answer_dialog = ""
-        answer_events = []
-        for key, value in key_word_dict.items():
-            word_from_json = value["key_words"]
-            if word_from_json.isspace() or word_from_json == "":
-                raise KeyWordsErrors("key_wods_empty_error")
-            for item in word_from_json.split(","):
-                if item.strip() in self.text:
-                    answer += f"{key} "
-                    if value.get("events"):
-                        for item in value.get("events").split(","):
-                            answer_events.append(item.strip())
-                    if value.get("buttons"):
-                        for item in value.get("buttons").split(","):
-                            answer_buttons.append(item.strip())
-                    if value.get("dialog"):
-                        answer_dialog = value["dialog"]
-        if answer == "":
+        answer_message = ""
+        answer_event = ""
+        for key, value in self.key_words.items():
+            for item in value["key_words"]:
+                if item in self.text:
+                    if flag:
+                        raise KeyWordsErrors("key_word_duplicate_error", language=self.settings.LANGUAGE)
+                    answer = key
+                    answer_buttons = value["buttons"]
+                    answer_message = value["message"]
+                    answer_event = value["event"]
+                    flag = True
+        if not flag:
             return False
-        answer = answer.strip()
-        if len(answer.split(" ")) > 1:
-            return {
-                "key_word": answer,
-                "event": answer_events,
-                "dialog": answer_dialog,
-                "buttons": answer_buttons,
-                "success": False
-            }
-        else:
-            return {
-                "key_word": answer,
-                "event": answer_events,
-                "dialog": answer_dialog,
-                "buttons": answer_buttons,
-                "success": True
-            }
+        return {
+            "key_word": answer,
+            "event": answer_event,
+            "message": answer_message,
+            "buttons": answer_buttons,
+        }
 
 
 

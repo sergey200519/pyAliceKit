@@ -1,4 +1,4 @@
-from pyAlice.messages.errors_message import EMBEDDED_ERRORS_MESSAGE
+from pyAlice.messages.errors_messages import EMBEDDED_ERRORS_MESSAGE
 
 
 class BaseErrors(Exception):
@@ -15,26 +15,18 @@ class BaseErrors(Exception):
         return f"Base Error: {self.get_dialog(self.msg)}"
 
 
-class SettingsEroors(BaseErrors):
+class SettingsErrors(BaseErrors):
     def __str__(self):
-        return f"Settings Error: {self.get_dialog(self.msg)}"
-
-
+        return f"Settings Error: {self.get_dialog(self.msg).format(self.context)}"
+    
 class KeyWordsErrors(BaseErrors):
     def __str__(self):
-        return f"Key words Error: {self.get_dialog(self.msg)}"
-
-
-class IntentsErrors(BaseErrors):
-    def __str__(self):
-        return f"Intents Error: {self.get_dialog(self.msg)}"
-
-
+        return f"Key words Error: {self.get_dialog(self.msg).format(self.context)}"
+    
 class MessageErrors(BaseErrors):
     def __str__(self):
         return f"Dialogs Error: {self.get_dialog(self.msg).format(self.context)}"
-
-
-class PyAliceErrors(BaseErrors):
+    
+class StorageErrors(BaseErrors):
     def __str__(self):
-        return f"PyAlice Error: {self.get_dialog(self.msg)}"
+        return f"Storage Error: {self.get_dialog(self.msg).format(self.context)}"

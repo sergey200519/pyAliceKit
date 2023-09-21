@@ -29,7 +29,7 @@
     "buttons": "buttons_list",
     "text": "str(text)",
     "end_session": false
-  },
+  }
 }
 
 

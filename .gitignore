@@ -10,3 +10,7 @@ modules/
 main.py
 settings.py
 .vscode/
+data.json
+events.py
+sim.py
+test.py

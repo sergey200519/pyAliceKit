@@ -21,6 +21,7 @@ class PyAlice(Base):
 
         self.text = self.params_alice["request"][self.settings.SOURCE_TEXT]
         self.new = self.params_alice["session"]["new"]
+        self.end_session = False
 
         self.__processing_params()
 
@@ -76,13 +77,16 @@ class PyAlice(Base):
                 # Respond with the original request or welcome the user if this is the beginning of the dialog and the request has not yet been made.
                 'text': self.result_message,
                 # Don't finish the session after this response.
-                'end_session': False
+                'end_session': self.end_session
             },
         }
         if type == "json":
             return json.dumps(params_for_alice)
         elif type == "dict":
             return params_for_alice
+    
+    def end_session_alice(self):
+        self.end_session = True
 
 
 

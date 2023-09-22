@@ -17,3 +17,7 @@ def new_settings_is_valid(new_settings):
     if new_settings.SOURCE_TEXT is None and (new_settings.SOURCE_TEXT != "commands" or new_settings.SOURCE_TEXT != "original_utterance"):
         return "source_text_setting_error"
     return "success"
+
+
+def end_alice_event(event, cls):
+    cls.end_session_alice()

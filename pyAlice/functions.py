@@ -1,3 +1,6 @@
+import os
+from sys import platform
+
 def new_settings_is_valid(new_settings):
     if type(new_settings.EVENTS) != bool:
         return "events_setting_error"
@@ -17,3 +20,24 @@ def new_settings_is_valid(new_settings):
     if new_settings.SOURCE_TEXT is None and (new_settings.SOURCE_TEXT != "commands" or new_settings.SOURCE_TEXT != "original_utterance"):
         return "source_text_setting_error"
     return "success"
+
+
+def end_alice_event(event, cls):
+    cls.end_session_alice()
+
+def clear_console():
+    if platform == "linux" or platform == "linux2" or platform == "darwin":
+        os.system("clear")
+    elif platform == "win32":
+        os.system("cls") 
+
+def finish_PyAlice(cls, emptiness_actions, successful_fun):
+    if cls.is_empty_events() and cls.buttons == [] and cls.key_word == []:
+        return emptiness_actions(cls)
+    else:
+        cls.inaction = False
+        return successful_fun(cls)
+
+
+def pass_fun(*args, **kwargs):
+    pass

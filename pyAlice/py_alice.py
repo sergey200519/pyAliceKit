@@ -1,3 +1,10 @@
+"""
+PyAlice
+v0.1
+"""
+
+
+
 import datetime
 import json
 import os

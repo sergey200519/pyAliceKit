@@ -1,4 +1,4 @@
-import datetime
+import datetime, json
 
 from pyAlice.errors.errors import MessageErrors, SettingsErrors, StorageErrors
 from pyAlice.messages.embedded_message import embedded_message
@@ -8,11 +8,11 @@ class Base:
     # bool
     new = False
     # str
-    result_message, key_word, text = "", "", ""
+    result_message, text = "", ""
     # dict
-    intents, message, storage, events, logs, response = {}, {}, {}, {}, {}, {}
+    intents, message, storage, events, logs, response, more_data_message = {}, {}, {}, {}, {}, {}, {}
     # list
-    buttons, alice_buttons = [], []
+    buttons, alice_buttons, key_word = [], [], []
 
     EMBEDDED_MESSAGE = embedded_message
 
@@ -67,9 +67,19 @@ class Base:
             button = self.settings.BUTTONS.get(item)
             if button is None:
                 raise SettingsErrors("button_not_found_error", context=item, language=self.settings.DEBUG_LANGUAGE)
-            answer.append(button)
+            if button not in answer:
+                answer.append(button)
         self.add_log("buttons_success_founded", color="yellow", start_time=self.start_time)
         return answer
+    
+    def add_button(self, name):
+        if name not in self.buttons:
+            self.buttons.append(name)
+            self.alice_buttons = self.get_buttons()
+    
+    def add_buttons(self, buttons):
+        for item in buttons:
+            self.add_button(item)
     
     def get_storage(self):
         return self.storage
@@ -106,3 +116,19 @@ class Base:
                 event["event_data"] = event_data
                 fun(event, self)
                 self.add_log("event_success_call", color="blue", context=event_name, start_time=self.start_time)
+    
+    def is_empty_events(self):
+        if self.events == {}:
+            return True
+        for event in self.events.keys():
+            if event not in self.settings.IGNORE_EVENTS_LIST:
+                return False
+        return True
+    
+    def add_message(self, message_name):
+        self.result_message = self.get_message(message_name)
+        more_data = self.settings.MORE_DATA_MESSAGES.get(message_name)
+        if more_data is not None:
+            self.more_data_message = json.loads(json.dumps(more_data).replace("$MESSAGE", self.result_message))
+        else:
+            self.more_data_message = {}

@@ -1,14 +1,12 @@
 import os
 from sys import platform
 
+from pyAlice.functions import clear_console
+
 
 class Simulation:
     def __init__(self, handler):
-        if platform == "linux" or platform == "linux2" or platform == "darwin":
-            def clear(): return os.system("clear")
-        elif platform == "win32":
-            def clear(): return os.system("cls")
-        clear()
+        clear_console()
         self.handler = handler
         self.user_data = ""
         self.response()
@@ -57,7 +55,7 @@ class Simulation:
 
     def response(self):
         while True:
-            if self.user_data == "exit":
-                break
             req = self.request()
             print(req["response"]["text"])
+            if req["response"]["end_session"] == True:
+                exit()

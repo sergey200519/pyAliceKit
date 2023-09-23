@@ -25,7 +25,7 @@ class KeyWordsErrors(BaseErrors):
     
 class MessageErrors(BaseErrors):
     def __str__(self):
-        return f"Dialogs Error: {self.get_dialog(self.msg).format(self.context)}"
+        return f"Message Error: {self.get_dialog(self.msg).format(self.context)}"
     
 class StorageErrors(BaseErrors):
     def __str__(self):

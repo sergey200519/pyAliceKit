@@ -35,7 +35,6 @@ class PyAlice(Base):
         self.inaction = True
 
         self.__processing_params()
-        print(Path(__file__).resolve().parents)
         return distributor(self, emptiness_actions, successful_fun)
 
     def init_key_word(self):

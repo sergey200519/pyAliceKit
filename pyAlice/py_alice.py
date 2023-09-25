@@ -39,7 +39,12 @@ class PyAlice(Base):
 
     def init_key_word(self):
         try:
-            text_for_key_words = self.params_alice["request"][self.settings.TEXT_FOR_KEY_WORDS]
+            if self.settings.TEXT_FOR_KEY_WORDS in self.params_alice["request"].keys():
+                text_for_key_words = self.params_alice["request"][self.settings.TEXT_FOR_KEY_WORDS]
+            elif "nlu" in self.params_alice["request"].keys():
+                text_for_key_words = " ".join(self.params_alice["request"]["nlu"]["tokens"])
+            else:
+                text_for_key_words = ""
             key_words = KeyWord(text=text_for_key_words, settings=self.settings, start_time=self.start_time).key_word()
 
             if key_words["key_words"] == []:
@@ -70,7 +75,16 @@ class PyAlice(Base):
 
 
     def __processing_params(self):
-        self.text = self.params_alice["request"][self.settings.SOURCE_TEXT]
+        self.add_buttons(self.settings.CONSTANT_BUTTONS)
+
+
+        if self.settings.SOURCE_TEXT in self.params_alice["request"].keys():
+            self.text = self.params_alice["request"][self.settings.SOURCE_TEXT]
+        elif "nlu" in self.params_alice["request"].keys():
+            self.text = " ".join(self.params_alice["request"]["nlu"]["tokens"])
+        else:
+            self.text = ""
+        
         self.new = self.params_alice["session"]["new"]
 
         self.intents = self.params_alice["request"]["nlu"]["intents"]

@@ -9,6 +9,7 @@ class Simulation:
         clear_console()
         self.handler = handler
         self.user_data = ""
+        self.storage = {}
         self.response()
 
     def request(self):
@@ -17,7 +18,7 @@ class Simulation:
             "meta": {
                 "locale": "ru-RU",
                 "timezone": "UTC",
-                "client_id": "ru.yandex.searchplugin/7.16 (none none; android 4.4.2)",
+                "client_id": "ru.yandex",
                 "interfaces": {
                     "screen": {},
                     "payments": {},
@@ -26,16 +27,16 @@ class Simulation:
             },
             "session": {
                 "message_id": 5,
-                "session_id": "5175cbbd-e484-4858-b253-f4c7b4632385",
-                "skill_id": "37ccbb22-0b07-4a93-85c0-8517d17ccda7",
+                "session_id": "4567hjl-e484-48666-b253-f4c7b4632385",
+                "skill_id": "37ccdfghb22-0b07-4a83-85c0-8517d17ccda7",
                 "user": {
-                    "user_id": "150725BC0540B5EDE3E831A6DB9EFA4F5A3E9BD8BD7F800301393F537B2D40E6"
+                    "user_id": "000000000000000000"
                 },
                 "application": {
-                    "application_id": "EA141820AAB4284BCD741A1D9037A49D06166D2141AAE685F9360C6DEF2853B7"
+                    "application_id": "00000000000"
                 },
                 "new": False,
-                "user_id": "EA141820AAB4284BCD741A1D9037A49D06166D2141AAE685F9360C6DEF2853B7"
+                "user_id": "000000000"
             },
             "request": {
                 "command": f"{self.user_data}",
@@ -50,12 +51,19 @@ class Simulation:
                 },
                 "type": "SimpleUtterance"
             },
+            "state": {
+                "session": self.storage,
+                "user": {},
+                "application": {}
+            },
             "version": "1.0"
-        })
+        }, "context")
 
     def response(self):
         while True:
             req = self.request()
             print(req["response"]["text"])
+            print("Press ctrl+c to exit")
+            self.storage = req["state"]["session"]
             if req["response"]["end_session"] == True:
                 exit()

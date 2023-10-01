@@ -16,6 +16,8 @@ EMBEDDED_ERRORS_MESSAGE = {
   "starting_dialog_setting_error-ru": "Стартовая фраза не указана",
   "source_text_setting_error-ru": "'SOURCE_TEXT' должен быть равным 'commands' или 'original_utterance'",
 
+  "new_boolean_setting_error-ru": "Произошла ошибка при поппытке определение 'new'",
+
 
 
 
@@ -25,6 +27,7 @@ EMBEDDED_ERRORS_MESSAGE = {
 
   "group_buttons_not_found_error-ru": "Группа кнопок '{}' не найдена",
   "button_not_found_error-ru": "Кнопока '{}' не найдена",
+  "formatting_function_error-ru": "Произошла ошибка при попытке форматирования сообщение при помощи функции '{}'.",
 
   "item_in_storage_not_found_error-ru": "Запись в хранилище с именем '{}' не найдена",
   "overwrite_storage_error-ru": "'{}' такая запись уже сущетвует в хранилище и её перезапись невозможа, так как параметр 'overwrite' в состоянии True",

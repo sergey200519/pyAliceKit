@@ -45,12 +45,13 @@ class Base:
         if group_buttons is None:
             raise SettingsErrors("group_buttons_not_found_error", context=group, language=self.settings.DEBUG_LANGUAGE)
         for item in group_buttons:
-            self.buttons.append(item)
+            if item not in self.buttons:
+                self.buttons.append(item)
 
     def add_button(self, button):
         if "$" in button and button[0] == "$":
             self.add_group_buttons(button)
-        else:
+        elif button not in self.buttons:
             self.buttons.append(button)
 
 

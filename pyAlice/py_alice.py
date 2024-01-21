@@ -68,6 +68,7 @@ class PyAlice(Base):
 
         temp_new = from_str_bool_to_py_bool(self.params_alice["session"]["new"])
         if temp_new != -1:
+            print(f"new {temp_new}, {type(temp_new)} {temp_new == False}")
             self.new = temp_new
         else:
             raise SettingsErrors("new_boolean_setting_error", language=self.settings.DEBUG_LANGUAGE)

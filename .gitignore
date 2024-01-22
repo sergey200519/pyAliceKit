@@ -15,7 +15,7 @@ events.py
 sim.py
 test.py
 buttons.py
-key_words.py
+my_key_words.py
 formatting_function.py
 *.json
 *.txt

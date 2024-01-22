@@ -2,13 +2,13 @@ from pyAlice.messages.errors_messages import EMBEDDED_ERRORS_MESSAGE
 
 
 class BaseErrors(Exception):
-    def __init__(self, text, context=None, language="en", *args, **kwargs):
+    def __init__(self, text: str, context: str = None, language: str = "en", *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.msg = text
         self.context = context
         self.language = language
 
-    def get_dialog(self, key):
+    def get_dialog(self, key: str) -> str:
         return EMBEDDED_ERRORS_MESSAGE.get(f"{key}-{self.language}")
 
     def __str__(self):

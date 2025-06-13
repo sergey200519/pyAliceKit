@@ -1,4 +1,3 @@
-.gitignore
 .DS_Store
 __pycache__/
 plans/
@@ -19,3 +18,4 @@ key_words.py
 formatting_function.py
 *.json
 *.txt
+types/

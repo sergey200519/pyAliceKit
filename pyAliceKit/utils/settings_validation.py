@@ -45,13 +45,13 @@ def new_settings_is_valid(new_settings: ModuleType) -> str:
     if not isinstance(new_settings.ALL_MESSAGES, dict):
         return "k_all_messages_setting_error"
 
-    if not new_settings.STARTING_MESSAGE or new_settings.STARTING_MESSAGE not in new_settings.ALL_MESSAGES:
+    if not new_settings.STARTING_MESSAGE or new_settings.STARTING_MESSAGE not in new_settings.ALL_MESSAGES: # type: ignore
         return "k_starting_message_setting_error"
 
-    if not new_settings.ERROR_MESSAGE or new_settings.ERROR_MESSAGE not in new_settings.ALL_MESSAGES:
+    if not new_settings.ERROR_MESSAGE or new_settings.ERROR_MESSAGE not in new_settings.ALL_MESSAGES: # type: ignore
         return "k_error_message_setting_error"
 
-    if not new_settings.HELP_MESSAGE or new_settings.HELP_MESSAGE not in new_settings.ALL_MESSAGES:
+    if not new_settings.HELP_MESSAGE or new_settings.HELP_MESSAGE not in new_settings.ALL_MESSAGES: # type: ignore
         return "k_help_message_setting_error"
 
     if not isinstance(new_settings.DEBUG_LANGUAGE, str):

@@ -3,6 +3,7 @@ from types import ModuleType
 from typing import Any, Optional, Self
 
 from pyAliceKit.messages.embedded_message import embedded_message
+from pyAliceKit.utils.errors.errors import SettingsErrors
 from pyAliceKit.utils.settings_validation import new_settings_is_valid
 from pyAliceKit.utils.terminal import clear_terminal, print_log, print_start_welcome
 # from pyAlice.errors.errors import SettingsErrors, StorageErrors, MessageErrors
@@ -27,21 +28,22 @@ class Base:
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 
     def __init__(self, params_alice: dict[Any, Any] | str, settings: ModuleType) -> None:
-        clear_terminal()
-        print_start_welcome()
-        
+        self.start_time: datetime.datetime = datetime.datetime.now()
 
         self.params_alice: dict[Any, Any] = params_alice if isinstance(params_alice, dict) else json.loads(params_alice)
-        self.start_time: datetime.datetime = datetime.datetime.now()
 
         settings_is_valid: str = new_settings_is_valid(settings)
         if settings_is_valid != "settings_is_valid":
-            pass
-            # raise SettingsErrors(settings_is_valid, language=settings.DEBUG_LANGUAGE)
+            raise SettingsErrors(settings_is_valid, language=settings.DEBUG_LANGUAGE)
+        
         self.settings: ModuleType = settings
 
+        if self.settings.DEBUG:
+            clear_terminal()
+            print_start_welcome()
 
-    def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()):
+
+    def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()) -> None:
         if not self.settings.DEBUG:
             return
         delta_time: datetime.timedelta = datetime.datetime.now() - start_time

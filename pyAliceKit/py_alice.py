@@ -11,3 +11,4 @@ class PyAlice(Base):
 
     def __init__(self, params_alice: dict[Any, Any] | str, settings: ModuleType) -> None:
         super().__init__(params_alice, settings)
+        self.add_log("configuration_options_log", color="yellow", start_time=self.start_time)

@@ -1,9 +1,10 @@
 import datetime, json
 from types import ModuleType
-from typing import Any
+from typing import Any, Optional, Self
 
 from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.settings_validation import new_settings_is_valid
+from pyAliceKit.utils.terminal import clear_terminal, print_log, print_start_welcome
 # from pyAlice.errors.errors import SettingsErrors, StorageErrors, MessageErrors
 
 # from pyAlice.messages.embedded_message import embedded_message
@@ -15,19 +16,42 @@ class Base:
     # str
     result_message, came_message = "", ""
     # dict
-    intents, storage, events, logs, more_data_message = {}, {}, {}, {}, {}
+    intents = {}
+    storage = {}
+    events = {}
+    logs: dict[str, str] = {}
+    more_data_message = {}
     # list
     buttons, alice_buttons, key_words = [], [], []
 
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 
     def __init__(self, params_alice: dict[Any, Any] | str, settings: ModuleType) -> None:
-        self.params_alice = params_alice if isinstance(params_alice, dict) else json.loads(params_alice)
-        self.start_time = datetime.datetime.now()
+        clear_terminal()
+        print_start_welcome()
+        
+
+        self.params_alice: dict[Any, Any] = params_alice if isinstance(params_alice, dict) else json.loads(params_alice)
+        self.start_time: datetime.datetime = datetime.datetime.now()
 
         settings_is_valid: str = new_settings_is_valid(settings)
         if settings_is_valid != "settings_is_valid":
             pass
             # raise SettingsErrors(settings_is_valid, language=settings.DEBUG_LANGUAGE)
-        self.settings = settings
+        self.settings: ModuleType = settings
+
+
+    def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()):
+        if not self.settings.DEBUG:
+            return
+        delta_time: datetime.timedelta = datetime.datetime.now() - start_time
+        time: str = f"{delta_time.seconds}s {delta_time.microseconds} micros"
+        log_text: str = self.EMBEDDED_MESSAGE.get(f"{log}-{self.settings.DEBUG_LANGUAGE}", "").format(context)
+        self.logs[time] = f"{log_text}"
+        print_log(
+            log_text,
+            time,
+            text_color=color,
+            bg_color=bg_color
+        )
 

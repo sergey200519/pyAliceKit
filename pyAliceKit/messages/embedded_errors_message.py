@@ -29,5 +29,10 @@ embedded_errors_message: dict[str, str] = {
     "language_setting_error-ru": "Настройка LANGUAGE должна быть строкой",
     "source_text_setting_error-ru": "Настройка SOURCE_TEXT должна быть 'command' или 'original_utterance'",
     
+    # Ошибки с кнопками
+    "group_buttons_not_found_error-ru": "Группа кнопок '{}' не найдена",
+    "button_not_found_error-ru": "Кнопока '{}' не найдена",
 
+    # Ошибки с хранилищем
+    "item_in_storage_not_found_error-ru": "Запись в хранилище с именем '{}' не найдена",
 }

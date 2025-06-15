@@ -55,6 +55,3 @@ class Base:
             text_color=color,
             bg_color=bg_color
         )
-
-
-    # TODO: Messages

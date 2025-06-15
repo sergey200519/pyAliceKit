@@ -6,9 +6,6 @@ from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.errors.errors import SettingsErrors
 from pyAliceKit.utils.settings_validation import new_settings_is_valid
 from pyAliceKit.utils.terminal import clear_terminal, print_log, print_start_welcome
-# from pyAlice.errors.errors import SettingsErrors, StorageErrors, MessageErrors
-
-# from pyAlice.messages.embedded_message import embedded_message
 
 
 class Base:
@@ -18,12 +15,14 @@ class Base:
     result_message, came_message = "", ""
     # dict
     intents = {}
-    storage = {}
+    storage: dict[Any, Any] = {}
     events = {}
     logs: dict[str, str] = {}
     more_data_message = {}
     # list
-    buttons, alice_buttons, key_words = [], [], []
+    buttons: list[str] = []
+    alice_buttons: list[dict[str, Any]] = []
+    key_words: list[str] = []
 
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 
@@ -57,3 +56,5 @@ class Base:
             bg_color=bg_color
         )
 
+
+    # TODO: Messages

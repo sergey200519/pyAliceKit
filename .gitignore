@@ -10,10 +10,8 @@ modules/
 main.py
 settings.py
 .vscode/
-events.py
 sim.py
 test.py
-buttons.py
 key_words.py
 formatting_function.py
 *.json

@@ -5,7 +5,7 @@ from typing import Any, Optional, Self
 from pyAliceKit.core.buttons import Buttons
 from pyAliceKit.core.event_emitter import EventEmitter, event_emitter
 from pyAliceKit.core.intents import Intents
-from pyAliceKit.core.storage import Storage
+from pyAliceKit.core.session_storage import SessionStorage
 from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.errors.errors import SettingsErrors
 from pyAliceKit.utils.settings_validation import new_settings_is_valid
@@ -27,7 +27,7 @@ class Base:
     buttons: Buttons
     key_words: "KeyWords" # type: ignore
     intents = Intents
-    storage: Storage
+    session_storage: SessionStorage
     events: EventEmitter
     
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
@@ -49,7 +49,6 @@ class Base:
 
         #  Initialize options
         self.buttons = Buttons(self.settings)
-        self.storage = Storage(self.settings)
         self.events = event_emitter
 
 

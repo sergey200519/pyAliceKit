@@ -4,6 +4,7 @@ from pyAliceKit.base import Base
 from pyAliceKit.core.event_emitter import event_emitter
 from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.key_words import KeyWords
+from pyAliceKit.core.session_storage import SessionStorage
 from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors
 from pyAliceKit.utils.tools import from_str_bool_to_py_bool
 
@@ -69,17 +70,25 @@ class PyAlice(Base):
         else:
             raise SettingsErrors("new_boolean_setting_error", language=self.settings.DEBUG_LANGUAGE)
         
-        if self.params_alice.get("state") is not None:
-            # FIXME: check
-            self.storage.set_storage("state", self.params_alice["state"], overwrite=True)
+        self.session_storage = SessionStorage(
+            params_alice=self.params_alice,
+            settings=self.settings
+        )
+        if self.session_storage.get_all() != {}:
             self.add_log("storage_fill", color="green", start_time=self.start_time)
             event_emitter.emit(event_name="storageFillEvent", event={
-                                                                    "event": "storageFillEvent",
-                                                                    "where": "PyAlice.__processing_params",
-                                                                    "cls": self,
-                                                                    "storage": self.storage
-                                                                    })
+                                                                "event": "storageFillEvent",
+                                                                "where": "PyAlice.__processing_params",
+                                                                "cls": self,
+                                                                "storage": self.session_storage
+                                                                })
         else:
-            self.add_log("storage_not_fill", color="yellow", start_time=self.start_time)
+            self.add_log("storage_not_fill", color="light_red", start_time=self.start_time)
+            event_emitter.emit(event_name="storageNotFillEvent", event={
+                                                                "event": "storageNotFillEvent",
+                                                                "where": "PyAlice.__processing_params",
+                                                                "cls": self,
+                                                                "storage": self.session_storage
+                                                                })
 
         self.init_key_word()

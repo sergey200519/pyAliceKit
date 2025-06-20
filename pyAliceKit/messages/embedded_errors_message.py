@@ -35,6 +35,8 @@ embedded_errors_message: dict[str, str] = {
 
     # Ошибки с хранилищем
     "item_in_storage_not_found_error-ru": "Запись в хранилище с именем '{}' не найдена",
+    "overwrite_session_error-ru": "Попытка перезаписать уже существующее значение сессии: {}",
+
 
     # Ошибки с alice_params
     "new_boolean_setting_error-ru": "Произошла ошибка при поппытке определение 'new'",

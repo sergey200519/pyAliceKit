@@ -3,6 +3,7 @@ from types import ModuleType
 from typing import Any, Optional, Self
 
 from pyAliceKit.core.buttons import Buttons
+from pyAliceKit.core.event_emitter import EventEmitter, event_emitter
 from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.storage import Storage
 from pyAliceKit.messages.embedded_message import embedded_message
@@ -20,7 +21,6 @@ class Base:
     logs: dict[str, str] = {}
     more_data_message = {}
     # list
-    events: list[str] = []   
     alice_buttons: list[dict[str, Any]] = []
    
     # Declarations of attributes with value as instances (to be initialized later)
@@ -28,6 +28,7 @@ class Base:
     key_words: "KeyWords" # type: ignore
     intents = Intents
     storage: Storage
+    events: EventEmitter
     
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 
@@ -49,6 +50,7 @@ class Base:
         #  Initialize options
         self.buttons = Buttons(self.settings)
         self.storage = Storage(self.settings)
+        self.events = event_emitter
 
 
     def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()) -> None:

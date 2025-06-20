@@ -57,8 +57,6 @@ class PyAlice(Base):
             raise
 
     
-
-    
     def __processing_params(self: Self) -> None:
         if self.settings.SOURCE_TEXT in self.params_alice["request"].keys():
             self.came_message = self.params_alice["request"][self.settings.SOURCE_TEXT]

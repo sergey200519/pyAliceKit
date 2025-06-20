@@ -33,16 +33,14 @@ class PyAlice(Base):
            
             self.key_words: KeyWords = KeyWords(
                 text=text_for_key_words,
-                settings=self.settings,
-                start_time=self.start_time
+                settings=self.settings
             )
+            self.add_log("key_word_init_log", color="purple", start_time=self.start_time)
             self.key_words.key_word()
-
-            # if not key_words_result["key_words"]:
-            #     self.add_log("key_word_not_found_log", color="green", start_time=self.start_time)
-            # else:
-            #     self.key_words = key_words_result["key_words"]
-            #     self.add_log("key_word_log", color="green", start_time=self.start_time)
+            if self.key_words.key_words != []:
+                self.add_log("key_word_log", color="purple", start_time=self.start_time)
+            else:
+                self.add_log("key_word_not_found_log", color="purple", start_time=self.start_time)
 
         except KeyWordsErrors:
             raise
@@ -72,7 +70,7 @@ class PyAlice(Base):
             raise SettingsErrors("new_boolean_setting_error", language=self.settings.DEBUG_LANGUAGE)
         
         if self.params_alice.get("state") is not None:
-            
+            # FIXME: check
             self.storage.set_storage("state", self.params_alice["state"], overwrite=True)
             self.add_log("storage_fill", color="green", start_time=self.start_time)
             event_emitter.emit(event_name="storageFillEvent", event={

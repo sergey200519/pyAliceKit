@@ -2,7 +2,8 @@ from types import ModuleType
 from typing import Any, Self
 from pyAliceKit.base import Base
 from pyAliceKit.core.event_emitter import event_emitter
-from pyAliceKit.utils.errors.errors import SettingsErrors
+from pyAliceKit.core.key_words import KeyWords
+from pyAliceKit.utils.errors.errors import KeyWordsErrors, SettingsErrors
 from pyAliceKit.utils.tools import from_str_bool_to_py_bool
 
 
@@ -16,6 +17,36 @@ class PyAlice(Base):
         super().__init__(params_alice, settings)
         self.add_log("configuration_options_log", color="yellow", start_time=self.start_time)
         self.__processing_params()
+
+
+    def init_key_word(self):
+        try:
+
+            if self.settings.TEXT_FOR_KEY_WORDS in self.params_alice["request"]:
+                text_for_key_words = self.params_alice["request"][self.settings.TEXT_FOR_KEY_WORDS]
+            elif "nlu" in self.params_alice["request"]:
+                text_for_key_words = " ".join(self.params_alice["request"]["nlu"]["tokens"])
+            else:
+                text_for_key_words = ""
+
+           
+            self.key_words: KeyWords = KeyWords(
+                text=text_for_key_words,
+                settings=self.settings,
+                start_time=self.start_time
+            )
+            self.key_words.key_word()
+
+            # if not key_words_result["key_words"]:
+            #     self.add_log("key_word_not_found_log", color="green", start_time=self.start_time)
+            # else:
+            #     self.key_words = key_words_result["key_words"]
+            #     self.add_log("key_word_log", color="green", start_time=self.start_time)
+
+        except KeyWordsErrors:
+            raise
+
+    
 
     
     def __processing_params(self: Self) -> None:
@@ -44,3 +75,5 @@ class PyAlice(Base):
                                                                     })
         else:
             self.add_log("storage_not_fill", color="yellow", start_time=self.start_time)
+
+        self.init_key_word()

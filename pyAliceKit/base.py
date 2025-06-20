@@ -24,7 +24,7 @@ class Base:
     # list
     buttons: Buttons
     alice_buttons: list[dict[str, Any]] = []
-    key_words: list[str] = []
+    key_words: "KeyWords" # type: ignore
 
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 

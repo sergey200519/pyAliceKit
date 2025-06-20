@@ -11,8 +11,6 @@ main.py
 settings.py
 .vscode/
 sim.py
-test.py
-key_words.py
 formatting_function.py
 *.json
 *.txt

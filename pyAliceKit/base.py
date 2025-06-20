@@ -2,6 +2,8 @@ import datetime, json
 from types import ModuleType
 from typing import Any, Optional, Self
 
+from pyAliceKit.core.buttons import Buttons
+from pyAliceKit.core.storage import Storage
 from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.errors.errors import SettingsErrors
 from pyAliceKit.utils.settings_validation import new_settings_is_valid
@@ -15,12 +17,12 @@ class Base:
     result_message, came_message = "", ""
     # dict
     intents = {}
-    storage: dict[Any, Any] = {}
+    storage: Storage
     events = {}
     logs: dict[str, str] = {}
     more_data_message = {}
     # list
-    buttons: list[str] = []
+    buttons: Buttons
     alice_buttons: list[dict[str, Any]] = []
     key_words: list[str] = []
 
@@ -40,6 +42,10 @@ class Base:
         if self.settings.DEBUG:
             clear_terminal()
             print_start_welcome()
+
+        #  Initialize options
+        self.buttons = Buttons(self.settings)
+        self.storage = Storage(self.settings)
 
 
     def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()) -> None:

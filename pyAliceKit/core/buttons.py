@@ -1,5 +1,5 @@
 from types import ModuleType
-from typing import Self
+from typing import Any, Self
 
 from pyAliceKit.utils.errors.errors import SettingsErrors
 
@@ -8,7 +8,8 @@ class Buttons:
     def __init__(self: Self, settings: ModuleType) -> None:
         self.__settings: ModuleType = settings
         self.current_buttons: list[str] = []
-        self.alice_buttons: list[dict[str, str]] = []
+        self.alice_buttons: list[dict[Any, Any]] = []
+        self.add_buttons(self.__settings.CONSTANT_BUTTONS)
 
     def add_group_buttons(self: Self, group: str) -> None:
         group_buttons: str | None = self.__settings.BUTTONS_GROUPS.get(group)

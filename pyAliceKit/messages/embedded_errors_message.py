@@ -35,4 +35,7 @@ embedded_errors_message: dict[str, str] = {
 
     # Ошибки с хранилищем
     "item_in_storage_not_found_error-ru": "Запись в хранилище с именем '{}' не найдена",
+
+    # Ошибки с alice_params
+      "new_boolean_setting_error-ru": "Произошла ошибка при поппытке определение 'new'",
 }

@@ -17,16 +17,18 @@ class Base:
     # str
     result_message, came_message = "", ""
     # dict
-    intents = Intents
-    storage: Storage
-    events = {}
     logs: dict[str, str] = {}
     more_data_message = {}
     # list
-    buttons: Buttons
+    events: list[str] = []   
     alice_buttons: list[dict[str, Any]] = []
+   
+    # Declarations of attributes with value as instances (to be initialized later)
+    buttons: Buttons
     key_words: "KeyWords" # type: ignore
-
+    intents = Intents
+    storage: Storage
+    
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 
     def __init__(self, params_alice: dict[Any, Any] | str, settings: ModuleType) -> None:

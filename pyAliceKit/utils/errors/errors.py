@@ -24,6 +24,10 @@ class KeyWordsErrors(BaseErrors):
     def __str__(self: Self) -> str:
         return f"Key words Error: {self.get_dialog(self.msg).format(self.context)}"
     
+class IntentsErrors(BaseErrors):
+    def __str__(self: Self) -> str:
+        return f"Intent Error: {self.get_dialog(self.msg).format(self.context)}"
+    
 class MessageErrors(BaseErrors):
     def __str__(self: Self) -> str:
         return f"Message Error: {self.get_dialog(self.msg).format(self.context)}"

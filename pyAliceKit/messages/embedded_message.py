@@ -8,4 +8,6 @@ embedded_message: dict[str, str] = {
     "key_word_not_found_log-ru": "Ключевые слова не найдены в пользовательском запросе",
     "key_word_event_added_log-ru": "Добавлено событие, связанное с ключевым словом",
     "key_word_buttons_added_log-ru": "Добавлены кнопки, связанные с ключевыми словами",
+
+    "intents_log-ru": "Интенты успешно найдены и обработаны",
 }

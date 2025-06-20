@@ -6,7 +6,7 @@ from typing import Any, Self
 from pyAliceKit.base import Base
 from pyAliceKit.utils.errors.errors import KeyWordsErrors
 
-
+# FIXME: Without Base class
 class KeyWords(Base):
     def __init__(self: Self, text: str, settings: ModuleType, start_time: datetime.datetime) -> None:
         # super().__init__({}, settings)

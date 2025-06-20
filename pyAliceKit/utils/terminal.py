@@ -33,24 +33,28 @@ def print_log(
     bg_color: Optional[str] = None
 ) -> None:
     colors: dict[str, int] = {
-        "black": 0,
-        "red": 1,
-        "green": 2,
-        "yellow": 3,
-        "blue": 4,
-        "purple": 5,
-        "magenta": 5,  # alias
-        "cyan": 6,
-        "turquoise": 6,  # alias
-        "white": 7,
-        "gray": 8,
-        "light_red": 9,
-        "light_green": 10,
-        "light_yellow": 11,
-        "light_blue": 12,
-        "light_purple": 13,
-        "light_cyan": 14,
-        "light_white": 15
+        "black": 0,           # HEX: #000000, RGB: rgb(0, 0, 0)
+        "red": 1,             # HEX: #800000, RGB: rgb(128, 0, 0)
+        "green": 2,           # HEX: #008000, RGB: rgb(0, 128, 0)
+        "yellow": 3,          # HEX: #808000, RGB: rgb(128, 128, 0)
+        "blue": 4,            # HEX: #000080, RGB: rgb(0, 0, 128)
+        "purple": 5,          # HEX: #800080, RGB: rgb(128, 0, 128)
+        "magenta": 5,         # alias of purple — HEX: #800080, RGB: rgb(128, 0, 128)
+        "cyan": 6,            # HEX: #008080, RGB: rgb(0, 128, 128)
+        "turquoise": 6,       # alias of cyan — HEX: #008080, RGB: rgb(0, 128, 128)
+        "white": 7,           # HEX: #C0C0C0, RGB: rgb(192, 192, 192)
+        "gray": 8,            # HEX: #808080, RGB: rgb(128, 128, 128)
+        "light_red": 9,       # HEX: #FF0000, RGB: rgb(255, 0, 0)
+        "light_green": 10,    # HEX: #00FF00, RGB: rgb(0, 255, 0)
+        "light_yellow": 11,   # HEX: #FFFF00, RGB: rgb(255, 255, 0)
+        "light_blue": 12,     # HEX: #0000FF, RGB: rgb(0, 0, 255)
+        "light_purple": 13,   # HEX: #FF00FF, RGB: rgb(255, 0, 255)
+        "light_cyan": 14,     # HEX: #00FFFF, RGB: rgb(0, 255, 255)
+        "light_white": 15,    # HEX: #FFFFFF, RGB: rgb(255, 255, 255)
+        "brown": 16,          # HEX: #A52A2A, RGB: rgb(165, 42, 42)
+        "orange": 17,         # HEX: #FFA500, RGB: rgb(255, 165, 0)
+        "pink": 18,           # HEX: #FFC0CB, RGB: rgb(255, 192, 203)
+        "gold": 19            # HEX: #FFD700, RGB: rgb(255, 215, 0)
     }
 
     def color_code(name: Optional[str], is_bg: bool = False) -> str:

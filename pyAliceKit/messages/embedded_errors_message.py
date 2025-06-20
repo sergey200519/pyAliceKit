@@ -39,5 +39,10 @@ embedded_errors_message: dict[str, str] = {
     # Ошибки с alice_params
     "new_boolean_setting_error-ru": "Произошла ошибка при поппытке определение 'new'",
 
-    "duplicate_keyword-ru": "Обнаружено дублирование ключевого слова: {}"
+    "duplicate_keyword-ru": "Обнаружено дублирование ключевого слова: {}",
+
+    "intent_not_found-ru": "Интент '{}' не найден.",
+    "slots_not_found-ru": "У интента '{}' отсутствуют слоты.",
+    "slot_not_found-ru": "Слот '{}' не найден.",
+    "slot_value_not_found-ru": "У слота '{}' отсутствует значение.",
 }

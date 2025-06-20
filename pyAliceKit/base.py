@@ -3,6 +3,7 @@ from types import ModuleType
 from typing import Any, Optional, Self
 
 from pyAliceKit.core.buttons import Buttons
+from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.storage import Storage
 from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.errors.errors import SettingsErrors
@@ -16,7 +17,7 @@ class Base:
     # str
     result_message, came_message = "", ""
     # dict
-    intents = {}
+    intents = Intents
     storage: Storage
     events = {}
     logs: dict[str, str] = {}

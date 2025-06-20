@@ -2,8 +2,9 @@ from types import ModuleType
 from typing import Any, Self
 from pyAliceKit.base import Base
 from pyAliceKit.core.event_emitter import event_emitter
+from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.key_words import KeyWords
-from pyAliceKit.utils.errors.errors import KeyWordsErrors, SettingsErrors
+from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors
 from pyAliceKit.utils.tools import from_str_bool_to_py_bool
 
 
@@ -44,6 +45,15 @@ class PyAlice(Base):
             #     self.add_log("key_word_log", color="green", start_time=self.start_time)
 
         except KeyWordsErrors:
+            raise
+
+        try:
+            self.intents: Intents = Intents(
+                params_alice=self.params_alice,
+                settings=self.settings
+            )
+            self.add_log("intents_log", color="blue", start_time=self.start_time)
+        except IntentsErrors:
             raise
 
     

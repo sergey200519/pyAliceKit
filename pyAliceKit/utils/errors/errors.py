@@ -39,3 +39,7 @@ class StorageErrors(BaseErrors):
 class AliceRequestErrors(BaseErrors):
     def __str__(self: Self) -> str:
         return f"Alice Request Error: {self.get_dialog(self.msg).format(self.context)}"
+    
+class DialogEngineErrors(BaseErrors):
+    def __str__(self: Self) -> str:
+        return f"Dialog Engine Error: {self.get_dialog(self.msg).format(self.context)}"

@@ -3,6 +3,7 @@ from types import ModuleType
 from typing import Any, Optional, Self
 
 from pyAliceKit.core.buttons import Buttons
+from pyAliceKit.core.dialog_engine import DialogEngine
 from pyAliceKit.core.event_emitter import EventEmitter, event_emitter
 from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.session_storage import SessionStorage
@@ -16,6 +17,7 @@ class Base:
     # bool
     new, end_session, inaction = False, False, True
     # str
+    previous_dialogue: str = "/start_story/right/talk"
     result_message, came_message = "", ""
     # dict
     logs: dict[str, str] = {}
@@ -29,6 +31,7 @@ class Base:
     intents = Intents
     session_storage: SessionStorage
     events: EventEmitter
+    dialogs: DialogEngine
     
     EMBEDDED_MESSAGE: dict[str, str] = embedded_message
 

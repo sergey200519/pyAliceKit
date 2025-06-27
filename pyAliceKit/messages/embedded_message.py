@@ -14,4 +14,8 @@ embedded_message: dict[str, str] = {
 
 
     "intents_log-ru": "Интенты успешно найдены и обработаны",
+
+    "dialog_score_log-ru": "Оценка диалога: {}",
+    "dialog_selected_log-ru": "Выбран наилучший диалог: {}",
+    "dialog_not_found_log-ru": "Подходящий диалог не найден"
 }

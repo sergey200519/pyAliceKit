@@ -1,11 +1,12 @@
 from types import ModuleType
 from typing import Any, Self
 from pyAliceKit.base import Base
+from pyAliceKit.core.dialog_engine import DialogEngine
 from pyAliceKit.core.event_emitter import event_emitter
 from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.key_words import KeyWords
 from pyAliceKit.core.session_storage import SessionStorage
-from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors
+from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors, StorageErrors
 from pyAliceKit.utils.tools import from_str_bool_to_py_bool
 
 
@@ -19,6 +20,11 @@ class PyAlice(Base):
         super().__init__(params_alice, settings)
         self.add_log("configuration_options_log", color="yellow", start_time=self.start_time)
         self.__processing_params()
+        self.dialogs = DialogEngine(
+            settings=self.settings,
+            pyAlice=self
+        )
+        self.dialogs.find_best_dialog()
 
 
     def init_key_word(self):
@@ -90,5 +96,13 @@ class PyAlice(Base):
                                                                 "cls": self,
                                                                 "storage": self.session_storage
                                                                 })
+        
+        try:
+            self.previous_dialogue = self.session_storage.get("pyAliceKit").get("previous_dialogue")
+        except StorageErrors:
+            self.previous_dialogue = None
+        except Exception:
+            self.previous_dialogue = None
+
 
         self.init_key_word()

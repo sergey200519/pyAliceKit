@@ -1,4 +1,5 @@
-from typing import Any, Callable, Optional, TypeVar, cast
+import inspect
+from typing import Any, Callable, TypeVar, cast
 
 
 # Тип значения узла в диалоге
@@ -16,19 +17,32 @@ def chooser(base_url: str) -> Callable[[F], F]:
         return cast(F, wrapper)
     return decorator
 
-def flatten_dialogs(
-    node: DialogNode,
-    path: str = "",
-    result: Optional[dict[str, DialogNode]] = None
-) -> dict[str, DialogNode]:
-    if result is None:
-        result = {}
 
-    result[path] = node
+def flatten_dialogs(dialogs: dict[str, Any], base_path: str = "") -> dict[str, Any]:
+    result: dict[str, Any] = {}
 
-    childs: dict[str, DialogNode] = node.get("childs", {})
-    for key, child in childs.items():
-        new_path = f"{path}/{key}" if path else key
-        flatten_dialogs(child, new_path, result)
+    def walk(node: dict[str, Any], path: str):
+        flat_node = {k: v for k, v in node.items() if k != "childs"}
+
+        # Сохраняем исходный код функции chooser, если она есть
+        if "chooser" in flat_node and callable(flat_node["chooser"]):
+            flat_node["chooser"] = inspect.getsource(flat_node["chooser"]).strip()
+
+        full_path = f"/{path}"
+        child_paths = []
+
+        if "childs" in node and isinstance(node["childs"], dict):
+            for child_key, child_node in node["childs"].items(): # type: ignore
+                child_path = f"{path}/{child_key}"
+                child_paths.append(f"/{child_path}") # type: ignore
+                walk(child_node, child_path) # type: ignore
+
+        if child_paths:
+            flat_node["childs"] = child_paths
+
+        result[full_path] = flat_node
+
+    for key, node in dialogs.items():
+        walk(node, key)
 
     return result

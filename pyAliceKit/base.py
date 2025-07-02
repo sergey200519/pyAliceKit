@@ -17,7 +17,7 @@ class Base:
     # bool
     new, end_session, inaction = False, False, True
     # str
-    previous_dialogue: str = "/start_story/right/talk"
+    previous_dialogue: str = "/start_story/right"
     result_message, came_message = "", ""
     # dict
     logs: dict[str, str] = {}
@@ -53,6 +53,7 @@ class Base:
         #  Initialize options
         self.buttons = Buttons(self.settings)
         self.events = event_emitter
+        self.previous_dialogue = "/start_story/right"
 
 
     def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()) -> None:

@@ -1,10 +1,11 @@
 import json
 import os
-from types import ModuleType
+from types import FunctionType, ModuleType
 from typing import Any, Optional, Self
 
-from pyAliceKit.utils.dialogs import flatten_dialogs
+from pyAliceKit.utils.dialogs import flatten_dialogs, prev_path
 from pyAliceKit.utils.errors.errors import DialogEngineErrors
+from pyAliceKit.utils.tools import load_user_function
 
 
 class DialogEngine:
@@ -33,18 +34,82 @@ class DialogEngine:
                 raise DialogEngineErrors("dialog_map_file_not_found", language=self.__settings.DEBUG_LANGUAGE)
         except Exception as e:
             raise DialogEngineErrors("dialog_map_load_failed", context=str(e), language=self.__settings.DEBUG_LANGUAGE)
+        
+    def __find_simple_dialog_path(
+            self: Self, 
+            came_message: str, 
+            activated_events: set[Any],
+            key_words: set[str],
+            intent_names: set[str],
+            previous_path: str,
+            previous_dialog: dict[str, Any]
+            ) -> Optional[str]:
+        if (
+                "transitions" in previous_dialog and
+                (
+                    "previous" in previous_dialog["transitions"] and 
+                    previous_dialog["transitions"]["previous"] == "$prev"
+                ) and 
+                "prev" in key_words
+        ):
+            return prev_path(previous_path)
+        if "stop" in key_words:
+            # TODO: Добавить обработку остановки диалога
+            return "/end"
+        if "chooser" in previous_dialog:
+            chooser_code: str = previous_dialog["chooser"]
+            chooser_name: str = previous_dialog.get("chooser_name", "")
+            if chooser_name == "":
+                # TODO: Добавить сообщение об ошибке
+                raise DialogEngineErrors("todo")
+            chooser_func: FunctionType = load_user_function(chooser_code, chooser_name)
+            try:
+                result: Optional[str] = chooser_func(self.__pyAlice) # type: ignore
+            except Exception as e:
+                # TODO: Добавить сообщение об ошибке
+                print(f"Error in chooser function: {e}")
+                raise DialogEngineErrors(
+                    "todo",
+                    context=str(e),
+                    language=self.__settings.DEBUG_LANGUAGE
+                )
+            if result != "" and result is not None and result in self.__dialogs_map:
+                return result
+            else:
+                # TODO: Добавить сообщение об ошибке
+                raise DialogEngineErrors(
+                    "todo",
+                    context=f"todo",
+                    language=self.__settings.DEBUG_LANGUAGE
+                )
+        return None
+
 
     def find_best_dialog(self: Self) -> Optional[str]:
         scores: dict[str, int] = {}
 
-        came_message = self.__pyAlice.came_message.lower()
-        seen_events = set(self.__pyAlice.events.get_events())
-        key_words = set(self.__pyAlice.key_words.key_words)
-        intent_names = set(self.__pyAlice.intents.get_intent_names())
-        previous = self.__pyAlice.previous_dialogue
+        came_message: str = self.__pyAlice.came_message.lower() # type: ignore
+        activated_events: set[Any] = set(self.__pyAlice.events.get_events()) # type: ignore
+        key_words: set[Any] = set(self.__pyAlice.key_words.key_words) # type: ignore
+        intent_names: set[Any] = set(self.__pyAlice.intents.get_intent_names()) # type: ignore
+        previous_path: str = self.__pyAlice.previous_dialogue # type: ignore
+        previous_dialog = self.__pyAlice.dialogs.get_dialog(previous_path, {}) # type: ignore
+
+        simple_dialog_path: str | None = self.__find_simple_dialog_path(
+            came_message=came_message, # type: ignore
+            activated_events=activated_events,
+            key_words=key_words,
+            intent_names=intent_names,
+            previous_path=previous_path, # type: ignore
+            previous_dialog=previous_dialog # type: ignore
+        )
+
+        if simple_dialog_path:
+            self.dialog = simple_dialog_path
+            return simple_dialog_path
 
         # Определяем множество кандидатов для сужения поиска
-        allowed_dialogs = set()
+        allowed_dialogs: set[Any] = set()
 
         # 1) Глобальные (корневые) диалоги — с одним уровнем '/'
         allowed_dialogs.update([
@@ -52,35 +117,27 @@ class DialogEngine:
             if name.count("/") == 1
         ])
 
-        # 2) Первые потомки предыдущего диалога
-        if previous and previous in self.__dialogs_map:
-            previous_data = self.__dialogs_map[previous]
+         # 2) Первые потомки предыдущего диалога
+        if previous_path in self.__dialogs_map:
+            previous_data = self.__dialogs_map[previous_path]
             allowed_dialogs.update(previous_data.get("childs", []))
 
             # 3) Диалоги из переходов предыдущего
-            transitions = previous_data.get("transitions", {})
-            # Если в ключевых словах есть "prev" — то разрешаем переход по "$prev" (заменяем его на previous)
-            for target in transitions.values():
-                if target == "$prev" and "prev" in key_words:
-                    allowed_dialogs.add(previous)
-                else:
-                    allowed_dialogs.add(target)
+            allowed_dialogs.update(previous_data.get("transitions", {}).values())
 
-        # Если нет previous, ищем среди всех (можно ограничить и здесь, если нужно)
-        if not previous:
-            allowed_dialogs = set(self.__dialogs_map.keys())
+        print(f"\nAllowed dialogs: {allowed_dialogs} \n\n")
 
-        for dialog_name, dialog_data in self.__dialogs_map.items():
-            # Сужаем поиск до allowed_dialogs, если previous есть
-            if previous and dialog_name not in allowed_dialogs:
+        for dialog_name in allowed_dialogs:
+            dialog_data: dict[str, Any] = self.__dialogs_map.get(dialog_name, {})
+            if not dialog_data:
                 continue
 
-            score = 0
-            reasons = []
+            score: int = 0
+            reasons: list[str] = []
 
             # События
             dialog_events = set(dialog_data.get("events", []))
-            matched_events = dialog_events & seen_events
+            matched_events = dialog_events & activated_events
             if matched_events:
                 score += len(matched_events)
                 reasons.append("matched_events")
@@ -98,19 +155,7 @@ class DialogEngine:
                 score += len(matched_intents) * 2
                 reasons.append("matched_intents")
 
-            # Переходы от предыдущего
-            if previous and previous in self.__dialogs_map:
-                transitions = self.__dialogs_map[previous].get("transitions", {})
-                for trigger in key_words | intent_names:
-                    target_dialog = transitions.get(trigger)
-                    # Приоритетно обрабатываем $prev если "prev" в ключевых словах
-                    if target_dialog == "$prev" and "prev" in key_words:
-                        target_dialog = previous
-                    if target_dialog == dialog_name:
-                        score += 3
-                        reasons.append("matched_transition")
-                        break
-
+            # TODO: Under a big question
             # Частичное совпадение по сообщению
             message_text = dialog_data.get("message", "").lower()
             if message_text and message_text in came_message:
@@ -125,38 +170,38 @@ class DialogEngine:
 
             if score > 0:
                 scores[dialog_name] = score
-                self.__pyAlice.add_log(
+                self.__pyAlice.add_log( # type: ignore
                     "dialog_score_log",
                     color="yellow",
                     context=f"{dialog_name}: {score} ({', '.join(reasons)})",
-                    start_time=self.__pyAlice.start_time
+                    start_time=self.__pyAlice.start_time # type: ignore
                 )
 
-        result = max(scores, key=scores.get) if scores else None
+        result: str | None = max(scores, key=scores.get) if scores else None # type: ignore
         self.dialog = result
 
         if result:
-            self.__pyAlice.add_log(
+            self.__pyAlice.add_log( # type: ignore
                 "dialog_selected_log",
                 color="green",
                 context=result,
-                start_time=self.__pyAlice.start_time
+                start_time=self.__pyAlice.start_time # type: ignore
             )
         else:
-            self.__pyAlice.add_log(
+            self.__pyAlice.add_log( # type: ignore
                 "dialog_not_found_log",
                 color="red",
-                start_time=self.__pyAlice.start_time
+                start_time=self.__pyAlice.start_time # type: ignore
             )
 
-        return result
+        return result # type: ignore
 
 
 
 
 
-    def get_dialog(self: Self, name: str) -> Optional[dict[str, Any]]:
-        return self.__dialogs_map.get(name)
+    def get_dialog(self: Self, name: str, default: Any = None) -> Optional[dict[str, Any]]:
+        return self.__dialogs_map.get(name, default)
 
     def get_all(self: Self) -> dict[str, dict[str, Any]]:
         return self.__dialogs_map

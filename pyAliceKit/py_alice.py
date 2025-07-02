@@ -6,7 +6,7 @@ from pyAliceKit.core.event_emitter import event_emitter
 from pyAliceKit.core.intents import Intents
 from pyAliceKit.core.key_words import KeyWords
 from pyAliceKit.core.session_storage import SessionStorage
-from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors, StorageErrors
+from pyAliceKit.utils.errors.errors import IntentsErrors, KeyWordsErrors, SettingsErrors
 from pyAliceKit.utils.tools import from_str_bool_to_py_bool
 
 
@@ -97,12 +97,12 @@ class PyAlice(Base):
                                                                 "storage": self.session_storage
                                                                 })
         
-        try:
-            self.previous_dialogue = self.session_storage.get("pyAliceKit").get("previous_dialogue")
-        except StorageErrors:
-            self.previous_dialogue = None
-        except Exception:
-            self.previous_dialogue = None
+        # try:
+        #     self.previous_dialogue = self.session_storage.get("pyAliceKit").get("previous_dialogue")
+        # except StorageErrors:
+        #     self.previous_dialogue = None
+        # except Exception:
+        #     self.previous_dialogue = None
 
 
         self.init_key_word()

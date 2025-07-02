@@ -26,7 +26,9 @@ def flatten_dialogs(dialogs: dict[str, Any], base_path: str = "") -> dict[str, A
 
         # Сохраняем исходный код функции chooser, если она есть
         if "chooser" in flat_node and callable(flat_node["chooser"]):
+            function_name: str = flat_node["chooser"].__name__
             flat_node["chooser"] = inspect.getsource(flat_node["chooser"]).strip()
+            flat_node["chooser_name"] = function_name
 
         full_path = f"/{path}"
         child_paths = []
@@ -46,3 +48,12 @@ def flatten_dialogs(dialogs: dict[str, Any], base_path: str = "") -> dict[str, A
         walk(node, key)
 
     return result
+
+
+def prev_path(path: str) -> str:
+    parts = path.strip('/').split('/')
+
+    if len(parts) <= 1:
+        return '/'
+
+    return '/' + '/'.join(parts[:-1])

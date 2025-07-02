@@ -16,11 +16,10 @@ def from_str_bool_to_py_bool(boolean: str | bool) -> bool | int:
 
 
 
-def load_user_function(code: str, func_name: str) -> FunctionType:
+def load_user_function(code: str, func_name: str, language: str) -> FunctionType:
     local_ns: dict[Any, Any] = {}
     exec(code, {}, local_ns)  # Выполняем в изолированном пространстве
     func = local_ns.get(func_name)
     if not callable(func):
-        # TODO: Добавить сообщение об ошибке
-        raise DialogEngineErrors(f"Функция {func_name} не найдена")
+        raise DialogEngineErrors("chooser_function_execution_failed", context=func_name, language=language)
     return func

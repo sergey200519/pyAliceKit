@@ -17,5 +17,6 @@ embedded_message: dict[str, str] = {
 
     "dialog_score_log-ru": "Оценка диалога: {}",
     "dialog_selected_log-ru": "Выбран наилучший диалог: {}",
-    "dialog_not_found_log-ru": "Подходящий диалог не найден"
+    "dialog_not_found_log-ru": "Подходящий диалог не найден",
+    "configuration_options_log-ru": "Карта диалогов успешно создана и сохранена на основе настроек",
 }

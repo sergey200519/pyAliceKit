@@ -47,4 +47,14 @@ embedded_errors_message: dict[str, str] = {
     "slots_not_found-ru": "У интента '{}' отсутствуют слоты.",
     "slot_not_found-ru": "Слот '{}' не найден.",
     "slot_value_not_found-ru": "У слота '{}' отсутствует значение.",
+
+    # Ошибки с диалогами
+    # Ошибки chooser
+    "chooser_function_execution_failed-ru": "Функция '{}' не найдена или не является вызываемой.",
+    "chooser_name_missing-ru": "Отсутствует имя функции chooser (ключ 'chooser_name') в диалоге.",
+    "chooser_function_execution_failed-ru": "Ошибка при выполнении функции chooser: {}",
+    "chooser_invalid_result-ru": "Функция chooser вернула неизвестный путь диалога: {}",
+    # Ошибки карты диалогов
+    "dialog_map_file_not_found-ru": "Файл карты диалогов не найден, а отладка отключена.",
+    "dialog_map_load_failed-ru": "Не удалось загрузить или создать карту диалогов: {}"
 }

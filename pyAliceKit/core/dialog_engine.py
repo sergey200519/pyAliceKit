@@ -30,6 +30,11 @@ class DialogEngine:
                 self.__dialogs_map = flatten_dialogs(dialogs)
                 with open(self.__dialogs_map_file, "w", encoding="utf-8") as f:
                     json.dump(self.__dialogs_map, f, ensure_ascii=False, indent=4)
+                self.__pyAlice.add_log( # type: ignore
+                    "configuration_options_log",
+                    color="cyan",
+                    start_time=self.__pyAlice.start_time # type: ignore
+                )
             else:
                 raise DialogEngineErrors("dialog_map_file_not_found", language=self.__settings.DEBUG_LANGUAGE)
         except Exception as e:
@@ -59,29 +64,22 @@ class DialogEngine:
         if "chooser" in previous_dialog:
             chooser_code: str = previous_dialog["chooser"]
             chooser_name: str = previous_dialog.get("chooser_name", "")
+            
             if chooser_name == "":
                 # TODO: Добавить сообщение об ошибке
-                raise DialogEngineErrors("todo")
-            chooser_func: FunctionType = load_user_function(chooser_code, chooser_name)
+                raise DialogEngineErrors("chooser_name_missing", language=self.__settings.DEBUG_LANGUAGE)
+            chooser_func: FunctionType = load_user_function(chooser_code, chooser_name, self.__settings.DEBUG_LANGUAGE)
+            
             try:
                 result: Optional[str] = chooser_func(self.__pyAlice) # type: ignore
             except Exception as e:
-                # TODO: Добавить сообщение об ошибке
-                print(f"Error in chooser function: {e}")
-                raise DialogEngineErrors(
-                    "todo",
-                    context=str(e),
-                    language=self.__settings.DEBUG_LANGUAGE
-                )
+                raise DialogEngineErrors("chooser_function_execution_failed", context=str(e), language=self.__settings.DEBUG_LANGUAGE)
+            
             if result != "" and result is not None and result in self.__dialogs_map:
                 return result
             else:
-                # TODO: Добавить сообщение об ошибке
-                raise DialogEngineErrors(
-                    "todo",
-                    context=f"todo",
-                    language=self.__settings.DEBUG_LANGUAGE
-                )
+                raise DialogEngineErrors("chooser_invalid_result", context=result, language=self.__settings.DEBUG_LANGUAGE)
+        
         return None
 
 
@@ -124,8 +122,6 @@ class DialogEngine:
 
             # 3) Диалоги из переходов предыдущего
             allowed_dialogs.update(previous_data.get("transitions", {}).values())
-
-        print(f"\nAllowed dialogs: {allowed_dialogs} \n\n")
 
         for dialog_name in allowed_dialogs:
             dialog_data: dict[str, Any] = self.__dialogs_map.get(dialog_name, {})

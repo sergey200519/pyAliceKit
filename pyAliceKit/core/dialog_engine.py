@@ -66,7 +66,6 @@ class DialogEngine:
             chooser_name: str = previous_dialog.get("chooser_name", "")
             
             if chooser_name == "":
-                # TODO: Добавить сообщение об ошибке
                 raise DialogEngineErrors("chooser_name_missing", language=self.__settings.DEBUG_LANGUAGE)
             chooser_func: FunctionType = load_user_function(chooser_code, chooser_name, self.__settings.DEBUG_LANGUAGE)
             

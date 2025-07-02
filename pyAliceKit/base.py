@@ -53,7 +53,6 @@ class Base:
         #  Initialize options
         self.buttons = Buttons(self.settings)
         self.events = event_emitter
-        self.previous_dialogue = "/start_story/right"
 
 
     def add_log(self: Self, log: str, color: str | None = None, bg_color: Optional[str] = None, context: str = "", start_time: datetime.datetime = datetime.datetime.now()) -> None:

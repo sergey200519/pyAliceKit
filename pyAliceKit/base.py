@@ -6,6 +6,7 @@ from pyAliceKit.core.buttons import Buttons
 from pyAliceKit.core.dialog_engine import DialogEngine
 from pyAliceKit.core.event_emitter import EventEmitter, event_emitter
 from pyAliceKit.core.intents import Intents
+from pyAliceKit.core.key_words import KeyWords
 from pyAliceKit.core.session_storage import SessionStorage
 from pyAliceKit.messages.embedded_message import embedded_message
 from pyAliceKit.utils.errors.errors import SettingsErrors
@@ -17,7 +18,7 @@ class Base:
     # bool
     new, end_session, inaction = False, False, True
     # str
-    previous_dialogue: str = "/start_story/right"
+    previous_dialogue: str = "/"
     result_message, came_message = "", ""
     # dict
     logs: dict[str, str] = {}
@@ -27,8 +28,8 @@ class Base:
    
     # Declarations of attributes with value as instances (to be initialized later)
     buttons: Buttons
-    key_words: "KeyWords" # type: ignore
-    intents = Intents
+    key_words: KeyWords | None = None
+    intents: Intents | None = None
     session_storage: SessionStorage
     events: EventEmitter
     dialogs: DialogEngine

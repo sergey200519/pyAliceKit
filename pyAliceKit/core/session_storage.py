@@ -8,15 +8,15 @@ class SessionStorage:
     def __init__(self: Self, params_alice: dict[Any, Any], settings: ModuleType) -> None:
         self.__params_alice = params_alice
         self.__settings = settings
-        self.__session_data = self.__params_alice.get("state", {}).get("session", {})
+        self.__session_data: dict[Any, Any] = self.__params_alice.get("state", {}).get("session", {})
+        self.__service_storage: dict[str, Any] = self.get("pyAliceKit", default={})
 
     def get_all(self: Self) -> dict[str, Any]:
+        self.__session_data["pyAliceKit"] = self.__service_storage
         return self.__session_data
 
-    def get(self: Self, key: str) -> Any:
-        if key not in self.__session_data:
-            raise StorageErrors("item_in_session_not_found_error", context=key, language=self.__settings.DEBUG_LANGUAGE)
-        return self.__session_data[key]
+    def get(self: Self, key: str, default: Any = None) -> Any:
+        return self.__session_data.get(key, default)
 
     def set(self: Self, key: str, value: Any, overwrite: bool = True) -> None:
         if key in self.__session_data and not overwrite:
@@ -32,3 +32,9 @@ class SessionStorage:
 
     def to_dict(self: Self) -> dict[str, Any]:
         return self.__session_data.copy()
+
+    def get_service_storage(self: Self) -> dict[str, Any]:
+        return self.__service_storage
+    
+    def set_service_storage(self: Self, key: str, value: Any) -> None:
+        self.__service_storage[key] = value

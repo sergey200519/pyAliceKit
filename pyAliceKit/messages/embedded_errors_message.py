@@ -56,5 +56,8 @@ embedded_errors_message: dict[str, str] = {
     "chooser_invalid_result-ru": "Функция chooser вернула неизвестный путь диалога: {}",
     # Ошибки карты диалогов
     "dialog_map_file_not_found-ru": "Файл карты диалогов не найден, а отладка отключена.",
-    "dialog_map_load_failed-ru": "Не удалось загрузить или создать карту диалогов: {}"
+    "dialog_map_load_failed-ru": "Не удалось загрузить или создать карту диалогов: {}",
+
+
+    "previous_dialogue_error-ru": "Ошибка при получении предыдущего диалога: {}",
 }

@@ -60,4 +60,5 @@ embedded_errors_message: dict[str, str] = {
 
 
     "previous_dialogue_error-ru": "Ошибка при получении предыдущего диалога: {}",
+    "starting_message_not_found-ru": "Сообщение STARTING_MESSAGE не найдено в ALL_MESSAGES",
 }

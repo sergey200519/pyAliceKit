@@ -219,8 +219,11 @@ class DialogEngine:
                 self.__pyAlice.result_message = res
                 self.__pyAlice.session_storage.set_service_storage("previous_dialogue", "/")
                 return
-            # TODO: Добавить обработку ошибок
-            raise
+            raise DialogEngineErrors(
+                "starting_message_not_found",
+                context=self.__settings.STARTING_MESSAGE,
+                language=self.__settings.DEBUG_LANGUAGE
+            )
         if dialog_path:
             dialog_data: Optional[dict[str, Any]] = self.get_dialog(dialog_path)
             # TODO: Добавить валидатор для dialogs

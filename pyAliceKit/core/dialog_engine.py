@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 import json
 import os
 from types import FunctionType, ModuleType
@@ -7,9 +10,12 @@ from pyAliceKit.utils.dialogs import flatten_dialogs, prev_path
 from pyAliceKit.utils.errors.errors import DialogEngineErrors
 from pyAliceKit.utils.tools import load_user_function
 
+if TYPE_CHECKING:
+    from pyAliceKit.py_alice.py_alice import PyAlice
+
 
 class DialogEngine:
-    def __init__(self: Self, settings: ModuleType, pyAlice: "PyAlice") -> None: # type: ignore
+    def __init__(self: Self, settings: ModuleType, pyAlice: PyAlice) -> None:
         self.__settings: ModuleType = settings
         self.__pyAlice: "PyAlice" = pyAlice # type: ignore
         self.__dialogs_map_file: str = self.__settings.DIALOGS_MAP_FILE
@@ -165,28 +171,28 @@ class DialogEngine:
 
             if score > 0:
                 scores[dialog_name] = score
-                self.__pyAlice.add_log( # type: ignore
+                self.__pyAlice.add_log(
                     "dialog_score_log",
                     color="yellow",
                     context=f"{dialog_name}: {score} ({', '.join(reasons)})",
-                    start_time=self.__pyAlice.start_time # type: ignore
+                    start_time=self.__pyAlice.start_time
                 )
 
         result: str | None = max(scores, key=scores.get) if scores else None # type: ignore
         self.dialog = result
 
         if result:
-            self.__pyAlice.add_log( # type: ignore
+            self.__pyAlice.add_log(
                 "dialog_selected_log",
                 color="green",
-                context=result,
-                start_time=self.__pyAlice.start_time # type: ignore
+                context=result, # type: ignore
+                start_time=self.__pyAlice.start_time
             )
         else:
-            self.__pyAlice.add_log( # type: ignore
+            self.__pyAlice.add_log(
                 "dialog_not_found_log",
                 color="red",
-                start_time=self.__pyAlice.start_time # type: ignore
+                start_time=self.__pyAlice.start_time
             )
 
         return result # type: ignore
@@ -200,3 +206,37 @@ class DialogEngine:
 
     def get_all(self: Self) -> dict[str, dict[str, Any]]:
         return self.__dialogs_map
+    
+    def get_message(self: Self, name: str) -> Optional[str]:
+        dialog: Optional[str] = self.__settings.ALL_MESSAGES.get(name, None)
+        # TODO: Добавить обработку ошибок
+        return dialog
+    
+    def apply_dialog(self: Self, dialog_path: Optional[str]) -> None:
+        if self.__pyAlice.new:
+            res: Optional[str] = self.get_message(self.__settings.STARTING_MESSAGE)
+            if res is not None:
+                self.__pyAlice.result_message = res
+                self.__pyAlice.session_storage.set_service_storage("previous_dialogue", "/")
+                return
+            # TODO: Добавить обработку ошибок
+            raise
+        if dialog_path:
+            dialog_data: Optional[dict[str, Any]] = self.get_dialog(dialog_path)
+            # TODO: Добавить валидатор для dialogs
+            if dialog_data and "message" in dialog_data:
+                message_key: str = dialog_data["message"]
+                self.__pyAlice.result_message = self.get_message(message_key) # type: ignore
+            self.__pyAlice.session_storage.set_service_storage("previous_dialogue", dialog_path)
+
+
+        # if path_dialog is not None and not self.new:
+        #     result_message_dict: dict[Any, Any] | None = self.dialogs.get_dialog(path_dialog)
+        #     if result_message_dict is not None and "message" in result_message_dict:
+        #         result_message_key = result_message_dict["message"]
+        #         self.result_message = self.dialogs.get_message(result_message_key)
+        #     print(self.result_message, path_dialog)
+        #     self.session_storage.set_service_storage("previous_dialogue", path_dialog)
+        # elif self.new:
+        #     self.result_message = self.dialogs.get_message(self.settings.STARTING_MESSAGE)
+        #     self.session_storage.set_service_storage("previous_dialogue", "/")

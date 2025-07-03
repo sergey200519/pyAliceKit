@@ -20,12 +20,11 @@ class Base:
     end_session, inaction = False, True
     # str
     previous_dialogue: str = "/"
-    result_message, came_message = "", ""
+    result_message: str = ""
+    came_message = ""
     # dict
     logs: dict[str, str] = {}
     more_data_message = {}
-    # list
-    alice_buttons: list[dict[str, Any]] = []
    
     # Declarations of attributes with value as instances (to be initialized later)
     buttons: Buttons

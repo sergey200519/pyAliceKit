@@ -16,7 +16,8 @@ from pyAliceKit.utils.terminal import clear_terminal, print_log, print_start_wel
 
 class Base:
     # bool
-    new, end_session, inaction = False, False, True
+    new: bool = False
+    end_session, inaction = False, True
     # str
     previous_dialogue: str = "/"
     result_message, came_message = "", ""

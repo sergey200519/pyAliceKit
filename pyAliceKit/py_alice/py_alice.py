@@ -2,11 +2,11 @@ from types import ModuleType
 from typing import Any, Self
 from pyAliceKit.base import Base
 from pyAliceKit.core.dialog_engine import DialogEngine
-from pyAliceKit.core.event_emitter import event_emitter
-from pyAliceKit.core.session_storage import SessionStorage
+from pyAliceKit.py_alice.processors.came_message import processing_came_message
 from pyAliceKit.py_alice.processors.keyword_and_intents import processing_keyword_and_intents
-from pyAliceKit.utils.errors.errors import SettingsErrors
-from pyAliceKit.utils.tools import from_str_bool_to_py_bool
+from pyAliceKit.py_alice.processors.new import processing_new
+from pyAliceKit.py_alice.processors.service_storage import processing_service_storage
+from pyAliceKit.py_alice.processors.storage import processing_storage
 
 
 class PyAlice(Base):
@@ -25,60 +25,14 @@ class PyAlice(Base):
         )
         self.dialogs.find_best_dialog()
     
-    def __processing_params(self: Self) -> None:
-        self.__get_came_message()
 
-        self.__processing_new()
+    def __processing_params(self: Self) -> None:
+        processing_came_message(self)
+
+        processing_new(self)
         
-        self.__processing_storage()
+        processing_storage(self)
         
-        self.__processing_service_storage()
+        processing_service_storage(self)
         
         processing_keyword_and_intents(self)
-
-
-    def __get_came_message(self: Self) -> None:
-        if self.settings.SOURCE_TEXT in self.params_alice["request"].keys():
-            self.came_message = self.params_alice["request"][self.settings.SOURCE_TEXT]
-        elif "nlu" in self.params_alice["request"].keys():
-            self.came_message = " ".join(self.params_alice["request"]["nlu"]["tokens"])
-        else:
-            self.came_message = ""
-
-    def __processing_new(self: Self) -> None:
-        temp_new: bool | int = from_str_bool_to_py_bool(self.params_alice["session"]["new"])
-        if temp_new != -1:
-            self.new = temp_new
-        else:
-            raise SettingsErrors("new_boolean_setting_error", language=self.settings.DEBUG_LANGUAGE)
-
-    def __processing_storage(self: Self) -> None:
-        self.session_storage = SessionStorage(
-            params_alice=self.params_alice,
-            settings=self.settings
-        )
-        if self.session_storage.get_all() != {}:
-            self.add_log("storage_fill", color="green", start_time=self.start_time)
-            event_emitter.emit(event_name="storageFillEvent", event={
-                                                                "event": "storageFillEvent",
-                                                                "where": "PyAlice.__processing_params",
-                                                                "cls": self,
-                                                                "storage": self.session_storage
-                                                                })
-        else:
-            self.add_log("storage_not_fill", color="light_red", start_time=self.start_time)
-            event_emitter.emit(event_name="storageNotFillEvent", event={
-                                                                "event": "storageNotFillEvent",
-                                                                "where": "PyAlice.__processing_params",
-                                                                "cls": self,
-                                                                "storage": self.session_storage
-                                                                })
-    
-    def __processing_service_storage(self: Self) -> None:
-        if self.new:
-            self.previous_dialogue = "/"
-        else:
-            try:
-                self.previous_dialogue = self.session_storage.get_service_storage().get("previous_dialogue", "/")
-            except Exception as e:
-                raise SettingsErrors("previous_dialogue_error", context=str(e), language=self.settings.DEBUG_LANGUAGE)

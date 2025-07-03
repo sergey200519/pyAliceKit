@@ -231,15 +231,3 @@ class DialogEngine:
                 message_key: str = dialog_data["message"]
                 self.__pyAlice.result_message = self.get_message(message_key) # type: ignore
             self.__pyAlice.session_storage.set_service_storage("previous_dialogue", dialog_path)
-
-
-        # if path_dialog is not None and not self.new:
-        #     result_message_dict: dict[Any, Any] | None = self.dialogs.get_dialog(path_dialog)
-        #     if result_message_dict is not None and "message" in result_message_dict:
-        #         result_message_key = result_message_dict["message"]
-        #         self.result_message = self.dialogs.get_message(result_message_key)
-        #     print(self.result_message, path_dialog)
-        #     self.session_storage.set_service_storage("previous_dialogue", path_dialog)
-        # elif self.new:
-        #     self.result_message = self.dialogs.get_message(self.settings.STARTING_MESSAGE)
-        #     self.session_storage.set_service_storage("previous_dialogue", "/")

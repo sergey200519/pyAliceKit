@@ -25,6 +25,7 @@ class Base:
     # dict
     logs: dict[str, str] = {}
     more_data_message = {}
+    image: dict[str, Any] = {}
    
     # Declarations of attributes with value as instances (to be initialized later)
     buttons: Buttons

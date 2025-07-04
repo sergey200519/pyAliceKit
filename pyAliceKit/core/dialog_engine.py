@@ -231,4 +231,7 @@ class DialogEngine:
                 message_key: str = dialog_data["message"]
                 self.__pyAlice.result_message = self.get_message(message_key) # type: ignore
                 self.__pyAlice.buttons.add_buttons(dialog_data.get("buttons", []))
+                image = dialog_data.get("image")
+                if image:
+                    self.__pyAlice.image = self.__settings.IMAGES.get(image, {})
             self.__pyAlice.session_storage.set_service_storage("previous_dialogue", dialog_path)

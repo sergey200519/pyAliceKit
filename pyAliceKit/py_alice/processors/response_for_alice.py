@@ -19,4 +19,6 @@ def processing_response_for_alice(self: PyAlice) -> dict[str, Any]:
             'end_session': self.end_session
         },
     }
+    if self.image != {}:
+        response_for_alice['response']['card'] = self.image
     return response_for_alice

@@ -32,7 +32,7 @@ class DialogEngine:
                 with open(self.__dialogs_map_file, "r", encoding="utf-8") as f:
                     self.__dialogs_map = json.load(f)
             if self.__settings.DEBUG:
-                dialogs = getattr(self.__settings, "DIALOGS", {})
+                dialogs = getattr(self.__settings, "DIALOG_NODES", {})
                 self.__dialogs_map = flatten_dialogs(dialogs)
                 with open(self.__dialogs_map_file, "w", encoding="utf-8") as f:
                     json.dump(self.__dialogs_map, f, ensure_ascii=False, indent=4)
@@ -230,4 +230,5 @@ class DialogEngine:
             if dialog_data and "message" in dialog_data:
                 message_key: str = dialog_data["message"]
                 self.__pyAlice.result_message = self.get_message(message_key) # type: ignore
+                self.__pyAlice.buttons.add_buttons(dialog_data.get("buttons", []))
             self.__pyAlice.session_storage.set_service_storage("previous_dialogue", dialog_path)

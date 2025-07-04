@@ -57,3 +57,9 @@ def prev_path(path: str) -> str:
         return '/'
 
     return '/' + '/'.join(parts[:-1])
+
+
+def include_nodes(obj: dict[str, Any], DEBUG: bool) -> dict[str, Any]:
+    if DEBUG:
+        return obj
+    return {}

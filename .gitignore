@@ -8,7 +8,6 @@ index.py
 venv/
 modules/
 main.py
-settings.py
 .vscode/
 sim.py
 formatting_function.py

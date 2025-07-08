@@ -23,7 +23,7 @@ def clean_dict(obj: dict[Any, Any]) -> dict[Any, Any]:
         elif isinstance(v, types.ModuleType):
             continue
         elif isinstance(v, dict):
-            result[k] = clean_dict(v)
+            result[k] = clean_dict(v) # type: ignore
         else:
             result[k] = v
     return result
@@ -42,7 +42,7 @@ def get_all_settings(settings: ModuleType) -> dict[str, Any]:
             continue
 
         if isinstance(value, dict):
-            cleaned = clean_dict(value)
+            cleaned = clean_dict(value) # type: ignore
             if is_serializable(cleaned):
                 result[key] = cleaned
             else:

@@ -41,13 +41,13 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 importlib.reload(self.settings)
                 data: dict[Any, Any] = get_all_settings(self.settings)
-                json_bytes: str = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8")
+                json_bytes: str = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8") # type: ignore
 
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.send_header("Content-Length", str(len(json_bytes)))
                 self.end_headers()
-                self.wfile.write(json_bytes)
+                self.wfile.write(json_bytes) # type: ignore
 
             except Exception as e:
                 traceback.print_exc()
@@ -80,11 +80,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                     return
 
                 current_value = getattr(self.settings, key)
-                new_value = self._cast_value(value, type(current_value))
+                new_value = self._cast_value(value, type(current_value)) # type: ignore
                 setattr(self.settings, key, new_value)
 
                 print(f"KEY: {key} | RAW VALUE: {value} | CASTED VALUE: {new_value}")
-                print("SETTINGS_PATH:", Path(self.settings.__file__).resolve())
+                print("SETTINGS_PATH:", Path(self.settings.__file__).resolve()) # type: ignore
 
                 self._update_settings_file(key, new_value)
 
@@ -115,13 +115,13 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 return float(value)
             elif expected_type in (list, dict) and isinstance(value, str):
                 return json.loads(value)
-            return expected_type(value)
+            return expected_type(value) # type: ignore
         except Exception:
             return value
 
     def _update_settings_file(self, key: str, value: Any):
         """Обновляет значение переменной в settings.py, зная путь из модуля"""
-        file_path = Path(self.settings.__file__).resolve()
+        file_path = Path(self.settings.__file__).resolve() # type: ignore
 
         with open(file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -131,14 +131,14 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         for line in lines:
             if line.strip().startswith(f"{key} ="):
                 python_value = self._python_repr(value)
-                new_lines.append(f"{key} = {python_value}\n")
+                new_lines.append(f"{key} = {python_value}\n") # type: ignore
                 updated = True
             else:
-                new_lines.append(line)
+                new_lines.append(line) # type: ignore
 
         if updated:
             with open(file_path, "w", encoding="utf-8") as f:
-                f.writelines(new_lines)
+                f.writelines(new_lines) # type: ignore
 
     def _python_repr(self, value: Any) -> str:
         """Преобразует Python-объект в валидную строку для settings.py"""

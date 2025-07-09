@@ -3,8 +3,58 @@ const getNodeHTML = (dialogNodesMap, path) => {
     if (!node) return `<div class="error">Узел "${path}" не найден.</div>`;
 
     const nodeId = path.replace(/\//g, "_").replace(/^_/, "");
-    
+
     return `
+        <div class="node-card" id="${nodeId}">
+            <h3>${path}</h3>
+            <p><strong>message:</strong> ${node.message || "—"}</p>
+            <p><strong>buttons:</strong> ${(node.buttons || []).join(", ") || "—"
+        }</p>
+            <button onclick="showNodePopup('${nodeId}')">Подробнее</button>
+
+            <div class="node-popup" id="popup_${nodeId}" style="display:none;">
+                <div class="popup-content">
+                    <h4>Детали узла: ${path}</h4>
+                    <pre>${JSON.stringify(node, null, 2)}</pre>
+                    <button onclick="hideNodePopup('${nodeId}')">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    `;
+};
+
+const getParentNodeId = (path) => {
+    const parts = path.split("/");
+    if (parts.length <= 1) return null; // Нет родителя
+    parts.pop(); // Удаляем последний элемент (текущий узел)
+    return parts.join("/").replace(/\//g, "_").replace(/^_/, "");
+};
+
+const isParent = (dialogNodesMap, path) => {
+    const node = dialogNodesMap[path];
+    return Array.isArray(node?.childs) && node.childs.length > 0;
+};
+
+const createBranch = (node, isGlobal) => {
+    console.log(`Создание ветки для узла: ${node.path}`);
+    const branchElement = document.createElement("div");
+    if (isGlobal) {
+        branchElement.className = "branch global_branch";
+    } else {
+        branchElement.className = "branch";
+    }
+    branchElement.id = node.path.replace(/\//g, "_").replace(/^_/, "");
+    return branchElement;
+};
+
+const createNode = (dialogNodes, dialogNodesMap, path) => {
+    console.log(`Функция для создание узла для пути: ${path}`);
+    const isParentNode = isParent(dialogNodesMap, path);
+    const nodeId = path.replace(/\//g, "_").replace(/^_/, "");
+    const node = dialogNodesMap[path];
+    node.path = path; // Добавляем путь к узлу для дальнейшего использования
+
+    const nodeElementString = `
         <div class="node-card" id="${nodeId}">
             <h3>${path}</h3>
             <p><strong>message:</strong> ${node.message || "—"}</p>
@@ -20,20 +70,23 @@ const getNodeHTML = (dialogNodesMap, path) => {
             </div>
         </div>
     `;
+    if (isParentNode) {
+        const branchElement = createBranch(node, false);
+        branchElement.innerHTML = `
+            <div class="branch_header">
+                ${nodeElementString}
+            </div>
+            <div class="branch_childs">
+            </div>
+        `;
+        return branchElement;
+    } else {
+        const tempContainer = document.createElement("div");
+        tempContainer.innerHTML = nodeElementString.trim();
+        const nodeElement = tempContainer.firstElementChild;
+        return nodeElement;
+    }
 };
-
-const isParent = (dialogNodesMap, path) => {
-    const node = dialogNodesMap[path];
-    return Array.isArray(node?.childs) && node.childs.length > 0;
-};
-
-const createBranch = () => {
-    
-}
-
-const createNode = (dialogNodes, dialogNodesMap, path, isGlobal) => {
-    
-}
 
 // TODO: Redesign the modal window system
 function showNodePopup(id) {
@@ -65,6 +118,7 @@ const drawFirstGeneration = (dialogNodes, dialogNodesMap, graphContainer) => {
             `;
         graphContainer.appendChild(nodeElement);
     });
+    return nodes.length;
 };
 
 const drawGenerations = (
@@ -77,10 +131,41 @@ const drawGenerations = (
         return drawFirstGeneration(dialogNodes, dialogNodesMap, graphContainer);
 
     const nodes = getGeneration(dialogNodesMap, generation);
-    console.log(`Generation ${generation} nodes:`, nodes);
+    console.log(`Построение узлов на уровне ${generation}`, nodes);
+    nodes.forEach((node) => {
+        console.log(`Создание узла для пути: ${node.path}`);
+        const nodeElement = createNode(dialogNodes, dialogNodesMap, node.path);
+        // console.log(getParentNodeId(node.path), "iddddddddddddddd", node.path);
+        const parentId = getParentNodeId(node.path);
+        if (parentId) {
+            const parentElement = document.getElementById(parentId);
+            if (parentElement) {
+                const childsContainer = parentElement.querySelector(".branch_childs");
+                if (childsContainer) {
+                    console.log(
+                        childsContainer,
+                        "childsContainer",
+                        nodeElement,
+                        "nodeElement"
+                    );
 
+                    childsContainer.appendChild(nodeElement);
+                } else {
+                    console.error(
+                        `Не найден контейнер для дочерних узлов в родителе: ${parentId}`
+                    );
+                }
+            } else {
+                console.error(`Родительский узел с ID ${parentId} не найден.`);
+            }
+        } else {
+            console.error(
+                `Не удалось получить ID родительского узла для пути: ${node.path}`
+            );
+        }
+    });
 
-    return nodes.length
+    return nodes.length;
 };
 
 const drawDialogNodes = (dialogNodes, dialogNodesMap) => {
@@ -89,6 +174,7 @@ const drawDialogNodes = (dialogNodes, dialogNodesMap) => {
     var i = 1;
     while (true) {
         count = drawGenerations(dialogNodes, dialogNodesMap, graphContainer, i);
+        console.log(`Построено ${count} узлов на уровне ${i}`, count === 0);
         if (count === 0) break;
         i++;
         if (i > 100) break;

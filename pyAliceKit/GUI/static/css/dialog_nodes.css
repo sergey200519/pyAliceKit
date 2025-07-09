@@ -91,6 +91,11 @@ button:hover {
     display: flex;
 }
 
+.branch_header {
+    display: flex;
+    align-items: center;
+}
+
 /* Child секции пока пустые, но можно оформить */
 .branch_childs {
     margin-left: 20px;

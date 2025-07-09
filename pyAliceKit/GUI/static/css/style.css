@@ -1,4 +1,5 @@
 @import "./settings.css";
+@import "./dialog_nodes.css";
 
 body {
   font-family: sans-serif;

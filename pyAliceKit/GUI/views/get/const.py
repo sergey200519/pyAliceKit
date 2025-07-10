@@ -1,11 +1,8 @@
-from __future__ import annotations
+import sys
 import json
 import importlib
-from typing import TYPE_CHECKING, Optional
-
-from typing import Any
 from urllib.parse import urlparse, parse_qs
-
+from typing import TYPE_CHECKING, Optional, Any
 import inspect
 import traceback
 
@@ -35,15 +32,25 @@ def safe_json(obj: dict[Any, Any] | list[Any] | tuple[Any, ...] | str | int | fl
         except TypeError:
             return f"<unsupported: {type(obj).__name__}>"
 
-def get_const(http: RequestHandler) -> Optional[dict[Any, Any]]:
+def get_const(http: "RequestHandler", force_reload: bool = False) -> Optional[dict[Any, Any]]:
     try:
-        importlib.reload(http.settings)
+        # 🔁 Принудительная перезагрузка settings
+        module_name = http.settings.__name__
+        if force_reload:
+            print("---------------> я в force_reload <------------------------")
+            if module_name in sys.modules:
+                print("---------------> module_name in sys.modules <------------------------")
+                module = sys.modules[module_name]
+                importlib.reload(module)
+                http.settings = module
+            else:
+                http.settings = importlib.import_module(module_name)
 
+        # 🔍 Парсинг параметров запроса
         query = urlparse(http.path).query
         params = parse_qs(query)
         key = params.get("key", [None])[0]
 
-        
         if key:
             if hasattr(http.settings, key):
                 raw_value = getattr(http.settings, key)
@@ -55,7 +62,7 @@ def get_const(http: RequestHandler) -> Optional[dict[Any, Any]]:
                 http.wfile.write(json.dumps({"error": f"Ключ '{key}' не найден в settings"}).encode("utf-8"))
                 return
         else:
-            # Если параметр key не передан — вернуть все безопасные константы
+            # Все константы
             response = {
                 k: safe_json(v)
                 for k, v in http.settings.__dict__.items()

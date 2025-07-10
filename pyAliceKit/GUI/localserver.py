@@ -1,7 +1,6 @@
 # pyAliceKit/GUI/localserver.py
 
 import http.server
-import importlib
 import json
 import socketserver
 import os
@@ -40,7 +39,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
 
         elif self.path == "/api/settings/get_all":
             try:
-                importlib.reload(self.settings)
                 data: dict[Any, Any] = get_all_settings(self.settings)
                 json_bytes: str = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8") # type: ignore
 
@@ -60,9 +58,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(error_bytes)))
                 self.end_headers()
                 self.wfile.write(error_bytes)
+        elif self.path.startswith("/api/settings/get_const_fresh"):
+            print("---------------> зашли в роут get_const_fresh <------------------------")
+            get_const(self, force_reload=True)
         elif self.path.startswith("/api/settings/get_const"):
-            get_const(self)
-
+            get_const(self, force_reload=False)
         else:
             super().do_GET()
 

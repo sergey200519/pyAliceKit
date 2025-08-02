@@ -10,7 +10,6 @@ from types import ModuleType
 from typing import Any
 
 from pyAliceKit.GUI.utils.html import get_html_template
-from pyAliceKit.GUI.views.get.const import get_const
 from pyAliceKit.GUI.views.get.settings import get_all_settings
 from pyAliceKit.GUI.views.post.settings_change_simple import post_settings_change_simple
 
@@ -58,11 +57,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(error_bytes)))
                 self.end_headers()
                 self.wfile.write(error_bytes)
-        elif self.path.startswith("/api/settings/get_const_fresh"):
-            print("---------------> зашли в роут get_const_fresh <------------------------")
-            get_const(self, force_reload=True)
         elif self.path.startswith("/api/settings/get_const"):
-            get_const(self, force_reload=False)
+            pass
         else:
             super().do_GET()
 

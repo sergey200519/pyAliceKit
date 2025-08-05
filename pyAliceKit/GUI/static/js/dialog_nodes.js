@@ -249,8 +249,15 @@ const drawGenerations = (dialogNodesMap, graphContainer, generation) => {
     return nodes.length;
 };
 
-const drawDialogNodes = (dialogNodes) => {
-    const dialogNodesMap = flattenDialogs(dialogNodes);
+const drawDialogNodes = (dialogNodes, isFlat=true) => {
+    var dialogNodesMap;
+
+    if (isFlat) {
+        dialogNodesMap = dialogNodes;
+    } else {
+        dialogNodesMap = flattenDialogs(dialogNodes);
+    }
+    
     console.log(dialogNodesMap);
     
     const graphContainer = document.querySelector(".graph_container");
@@ -296,15 +303,17 @@ const drawDialogNodes = (dialogNodes) => {
 const fetchDialogNodes = async () => {
     // try {
         const response = await fetch(
-            `${window.location.origin}/api/settings/get_const_fresh?key=DIALOG_NODES`
+            `${window.location.origin}/api/settings/get_dialog_nodes`
         );
         if (!response.ok) throw new Error("Ошибка загрузки настроек");
 
         const data = await response.json();
-        if (data.DIALOG_NODES) {
-            drawDialogNodes(data.DIALOG_NODES);
+        if (data.flat) {
+            drawDialogNodes(data.flat);
+        } else if (data.value) {    
+            drawDialogNodes(data.value, false);
         } else {
-            throw new Error("Ключ DIALOG_NODES не найден в ответе");
+            throw new Error("Ключ flat не найден в ответе");
         }
     // } catch (error) {
     //     document.querySelector(".container").innerHTML += `

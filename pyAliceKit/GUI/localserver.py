@@ -10,6 +10,7 @@ from types import ModuleType
 from typing import Any
 
 from pyAliceKit.GUI.utils.html import get_html_template
+from pyAliceKit.GUI.views.get.get_dialog_nodes import get_dialog_nodes
 from pyAliceKit.GUI.views.get.settings import get_all_settings
 from pyAliceKit.GUI.views.post.settings_change_simple import post_settings_change_simple
 
@@ -57,8 +58,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Content-Length", str(len(error_bytes)))
                 self.end_headers()
                 self.wfile.write(error_bytes)
-        elif self.path.startswith("/api/settings/get_const"):
-            pass
+        elif self.path == "/api/settings/get_dialog_nodes":
+            get_dialog_nodes(self)
         else:
             super().do_GET()
 

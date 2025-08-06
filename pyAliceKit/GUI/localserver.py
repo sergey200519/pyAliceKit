@@ -10,6 +10,7 @@ from types import ModuleType
 from typing import Any
 
 from pyAliceKit.GUI.utils.html import get_html_template
+from pyAliceKit.GUI.views.get.get_settings_const import get_settings_const
 from pyAliceKit.GUI.views.get.get_dialog_nodes import get_dialog_nodes
 from pyAliceKit.GUI.views.get.settings import get_all_settings
 from pyAliceKit.GUI.views.post.settings_change_simple import post_settings_change_simple
@@ -60,6 +61,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(error_bytes)
         elif self.path == "/api/settings/get_dialog_nodes":
             get_dialog_nodes(self)
+        elif self.path.startswith("/api/settings/get_const"):
+            get_settings_const(self)
         else:
             super().do_GET()
 
@@ -68,6 +71,10 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             post_settings_change_simple(self)
 
 
+
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True  # Это позволит сразу перезапускать сервер на том же порту
+
 def run(settings: ModuleType):
     static_dir = Path(__file__).parent / "static"
     os.chdir(static_dir)
@@ -75,9 +82,12 @@ def run(settings: ModuleType):
     def handler_with_settings(*args: Any, **kwargs: Any) -> RequestHandler:
         return RequestHandler(*args, settings=settings, **kwargs)
 
-    with socketserver.TCPServer(("", PORT), handler_with_settings) as httpd:
+    with ReusableTCPServer(("", PORT), handler_with_settings) as httpd:
         print(f"🚀 Local server running at http://localhost:{PORT}")
-        httpd.serve_forever()
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            print("🛑 Server interrupted and stopped gracefully")
 
 
 if __name__ == "__main__":

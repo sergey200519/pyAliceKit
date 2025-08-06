@@ -73,3 +73,31 @@ export const drawDialogNodes = (dialogNodes, isFlat = true) => {
         });
     }
 };
+
+
+export const drawAllMessages = (messages) => {
+    const container = document.querySelector('.dialogs_messages');
+    if (!container) return;
+
+    container.innerHTML = ''; // Очистить перед отрисовкой
+    
+
+    for (const [key, value] of Object.entries(messages)) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+
+        const keyElement = document.createElement('strong');
+        keyElement.textContent = key + ': ';
+
+        const valueElement = document.createElement('span');
+        if (typeof value === 'string') {
+            valueElement.textContent = value;
+        } else {
+            valueElement.textContent = JSON.stringify(value, null, 2);
+        }
+
+        messageDiv.appendChild(keyElement);
+        messageDiv.appendChild(valueElement);
+        container.appendChild(messageDiv);
+    }
+};

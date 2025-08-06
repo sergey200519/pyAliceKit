@@ -1,8 +1,9 @@
-import { fetchDialogNodes } from "./fetcher.js";
-import { drawDialogNodes } from "./drawer.js";
+import { fetchDialogNodes, fetchAllMessages } from "./fetcher.js";
+import { drawDialogNodes, drawAllMessages } from "./drawer.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchDialogNodes(drawDialogNodes);
+    fetchAllMessages(drawAllMessages);
 });
 
 window.addEventListener("resize", () => {

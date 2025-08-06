@@ -109,19 +109,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
             post_settings_change_simple(self)
 
 
-def notify_clients(message: str):
-    dead_clients = []
-    for client in RequestHandler.sse_clients:
-        try:
-            client.write(f"data: {message} server_id:{SERVER_ID}\n\n".encode("utf-8"))
-            client.flush()
-        except Exception:
-            dead_clients.append(client)
-    for client in dead_clients:
-        RequestHandler.sse_clients.remove(client)
-
-
-
 def monitor_files_and_notify(root_dir: Path):
     files = list(root_dir.rglob("*.py"))
     mtimes = {str(f): f.stat().st_mtime for f in files}

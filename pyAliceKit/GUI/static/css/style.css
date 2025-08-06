@@ -1,6 +1,25 @@
 @import "./settings.css";
 @import "./dialog_nodes.css";
 
+:root {
+    /* Основные цвета интерфейса */
+    --color-bg: #f2f3f7;
+    --color-node-bg-from: rgba(230, 235, 255, 0.6);
+    --color-node-bg-to: rgba(243, 245, 255, 0.6);
+    --color-node-border: #d1d5e3;
+    --color-popup-bg: #ffffff;
+    --color-popup-border: #8a84ff;
+    --color-text-main: #2e2f49;
+    --color-text-muted: #333;
+    --color-button-bg: #8a84ff;
+    --color-button-bg-hover: #6b65e0;
+    --color-arrow-main: #6c6f93;
+    --color-arrow-child: #8a84ff;
+    --color-arrow-transition: #a3a8e4;
+    --color-code-bg: #f2f3f7;
+    --color-code-border: #ddd;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -10,8 +29,20 @@
 body {
     font-family: sans-serif;
     background: #f5f5f5;
-    margin: 0;
-    padding: 2rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 1 auto;
 }
 
 .container {
@@ -20,4 +51,36 @@ body {
     max-width: 1280px;
     margin: 0 auto;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+ul {
+    list-style-type: none;
+}
+
+header {
+    margin-bottom: 40px;
+}
+
+header .container {
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+    padding: 2rem;
+}
+
+header .container nav ul {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-node-bg-to);
+    border-top: 2px solid var(--color-node-border);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+    font-size: 0.9rem;
 }

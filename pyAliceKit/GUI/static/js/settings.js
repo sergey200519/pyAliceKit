@@ -19,6 +19,7 @@ const requiredKeys = [
     "CONSTANT_BUTTONS",
     "STARTING_BUTTONS",
     "IMAGES",
+    "MORE_DATA_MESSAGES"
 ];
 
 const selectKeys = {
@@ -32,12 +33,13 @@ const selectKeys = {
 const redirectKeys = {
     "KEY_WORDS": "/key_words.html",
     "DIALOG_NODES": "/dialog_nodes.html",
-    "ALL_MESSAGES": "/messages.html",
+    "ALL_MESSAGES": "/dialog_nodes.html",
     "BUTTONS": "/buttons.html",
     "BUTTONS_GROUPS": "/buttons.html",
     "CONSTANT_BUTTONS": "/buttons.html",
     "STARTING_BUTTONS": "/buttons.html",
-    "IMAGES": "/images.html",
+    "IMAGES": "/development.html",
+    "MORE_DATA_MESSAGES": "development.html"
 }
 
 async function fetchSettings() {

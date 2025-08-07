@@ -1,0 +1,39 @@
+
+
+/* Reset и базовые стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Main content */
+main .development {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--color-popup-bg);
+    border: 1px solid var(--color-popup-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 40px;
+}
+
+main .development h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+main .development img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border: 2px solid var(--color-node-border);
+    border-radius: 10px;
+}
+
+main .development p {
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
+}
+

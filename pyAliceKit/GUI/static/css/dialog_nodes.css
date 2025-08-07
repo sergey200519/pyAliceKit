@@ -1,0 +1,176 @@
+:root {
+    /* Основные цвета интерфейса */
+    --color-bg: #f2f3f7;
+    --color-node-bg-from: rgba(230, 235, 255, 0.6);
+    --color-node-bg-to: rgba(243, 245, 255, 0.6);
+    --color-node-border: #d1d5e3;
+    --color-popup-bg: #ffffff;
+    --color-popup-border: #8a84ff;
+    --color-text-main: #2e2f49;
+    --color-text-muted: #333;
+    --color-button-bg: #8a84ff;
+    --color-button-bg-hover: #6b65e0;
+    --color-arrow-main: #6c6f93;         /* приглушённый серо-фиолетовый */
+    --color-arrow-child: #8a84ff;        /* фиолетовый основной */
+    --color-arrow-transition: #a3a8e4;   /* светлый сиреневый */
+    --color-code-bg: #f2f3f7;
+    --color-code-border: #ddd;
+}
+
+/* Контейнер с прокруткой */
+.graph_container {
+    position: relative;
+    width: 100%;
+    height: 1000px;
+    overflow: scroll;
+    padding: 10px;
+    background: var(--color-bg);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+/* Карточка узла */
+.node-card {
+    border: 1px solid var(--color-node-border);
+    padding: 16px;
+    margin: 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-node-bg-from), var(--color-node-bg-to));
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 2;
+    backdrop-filter: blur(4px);
+}
+.node-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Заголовок узла */
+.node-card h3 {
+    color: var(--color-text-main);
+    margin-bottom: 10px;
+}
+
+/* Попап */
+.node-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-popup-bg);
+    padding: 24px;
+    border: 2px solid var(--color-popup-border);
+    border-radius: 16px;
+    z-index: 1000;
+    max-height: 80vh;
+    max-width: 600px;
+    overflow-y: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.25s ease-out;
+}
+
+/* Контент попапа */
+.popup-content h4 {
+    margin-top: 0;
+    color: var(--color-text-main);
+}
+.popup-content pre {
+    background: var(--color-code-bg);
+    padding: 12px;
+    overflow-x: auto;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--color-code-border);
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+/* Кнопки */
+button {
+    background-color: var(--color-button-bg);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+button:hover {
+    background-color: var(--color-button-bg-hover);
+}
+
+/* Стили для секции "ветки" */
+.branch.global_branch {
+    border-left: 4px solid var(--color-button-bg);
+    margin: 16px 0;
+    padding-left: 12px;
+}
+
+.branch {
+    display: flex;
+}
+.branch_header {
+    display: flex;
+    align-items: center;
+}
+
+.branch_childs {
+    margin-left: 20px;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Стрелки */
+.arrow {
+    position: absolute;
+    height: 2px;
+    background-color: var(--color-arrow-main);
+    transform-origin: left center;
+    z-index: 0;
+    pointer-events: none;
+}
+.arrow.child {
+    background-color: var(--color-arrow-child);
+}
+.arrow.transition {
+    height: 2px;
+    background-image: repeating-linear-gradient(
+        to right,
+        var(--color-arrow-transition),
+        var(--color-arrow-transition) 4px,
+        transparent 4px,
+        transparent 8px
+    );
+    background-color: transparent; /* не нужен */
+    opacity: 0.85;
+}
+
+.arrow.animate {
+    transition: all 0.3s ease;
+}
+.arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid currentColor;
+}
+

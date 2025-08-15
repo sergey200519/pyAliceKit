@@ -56,15 +56,9 @@ class DialogEngine:
             previous_path: str,
             previous_dialog: dict[str, Any]
             ) -> Optional[str]:
-        if (
-                "transitions" in previous_dialog and
-                (
-                    "previous" in previous_dialog["transitions"] and 
-                    previous_dialog["transitions"]["previous"] == "$prev"
-                ) and 
-                "prev" in key_words
-        ):
+        if "transitions" in previous_dialog and "$prev" in previous_dialog["transitions"] and "prev" in key_words:
             return prev_path(previous_path)
+
         if "stop" in key_words:
             # TODO: Добавить обработку остановки диалога
             return "/end"
@@ -127,7 +121,9 @@ class DialogEngine:
             allowed_dialogs.update(previous_data.get("childs", []))
 
             # 3) Диалоги из переходов предыдущего
-            allowed_dialogs.update(previous_data.get("transitions", {}).values())
+            # Если transitions — список, просто добавляем элементы
+            allowed_dialogs.update(previous_data.get("transitions", []))
+
 
         for dialog_name in allowed_dialogs:
             dialog_data: dict[str, Any] = self.__dialogs_map.get(dialog_name, {})

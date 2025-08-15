@@ -7,6 +7,7 @@ from types import FunctionType, ModuleType
 from typing import Any, Optional, Self
 
 from pyAliceKit.utils.dialogs import flatten_dialogs, prev_path, putting_dialog_constants_places
+from pyAliceKit.utils.dialogs_validation import dialogs_is_valid
 from pyAliceKit.utils.errors.errors import DialogEngineErrors
 from pyAliceKit.utils.tools import load_user_function
 
@@ -21,6 +22,18 @@ class DialogEngine:
         self.__dialogs_map_file: str = self.__settings.DIALOGS_MAP_FILE
         self.dialog: Optional[str] = None  # Текущий диалог, если он найден
 
+        putting_dialog_constants_places(self.__settings)
+
+        validation_result: str = dialogs_is_valid(getattr(self.__settings, "DIALOG_NODES", {}))
+        if validation_result != "dialog_is_valid":
+            raise DialogEngineErrors(
+                validation_result,
+                context=validation_result,
+                language=self.__settings.DEBUG_LANGUAGE
+            )
+
+
+
         # Плоская карта диалогов
         self.__dialogs_map: dict[str, dict[str, Any]] = {}
 
@@ -29,10 +42,10 @@ class DialogEngine:
     def __init_dialogs_map(self: Self) -> None:
         try:
             if os.path.exists(self.__dialogs_map_file):
+                # TODO: path
                 with open(self.__dialogs_map_file, "r", encoding="utf-8") as f:
                     self.__dialogs_map = json.load(f)
             if self.__settings.DEBUG:
-                putting_dialog_constants_places(self.__settings)
                 dialogs = getattr(self.__settings, "DIALOG_NODES", {})
                 self.__dialogs_map = flatten_dialogs(dialogs)
                 with open(self.__dialogs_map_file, "w", encoding="utf-8") as f:

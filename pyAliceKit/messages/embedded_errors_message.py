@@ -57,6 +57,13 @@ embedded_errors_message: dict[str, str] = {
     # Ошибки карты диалогов
     "dialog_map_file_not_found-ru": "Файл карты диалогов не найден, а отладка отключена.",
     "dialog_map_load_failed-ru": "Не удалось загрузить или создать карту диалогов: {}",
+    # Ошибки валидации
+    "message_missing_or_invalid-ru": "Узел диалога не содержит обязательное поле 'message' или оно неверного типа",
+    "buttons_invalid-ru": "Поле 'buttons' должно быть списком",
+    "events_invalid-ru": "Поле 'events' должно быть списком",
+    "keywords_invalid-ru": "Поле 'keywords' должно быть списком",
+    "transitions_invalid-ru": "Поле 'transitions' должно быть списком",
+    "childs_invalid-ru": "Поле 'childs' должно быть словарем",
 
 
     "previous_dialogue_error-ru": "Ошибка при получении предыдущего диалога: {}",

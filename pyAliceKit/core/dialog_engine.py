@@ -6,7 +6,7 @@ import os
 from types import FunctionType, ModuleType
 from typing import Any, Optional, Self
 
-from pyAliceKit.utils.dialogs import flatten_dialogs, prev_path
+from pyAliceKit.utils.dialogs import flatten_dialogs, prev_path, putting_dialog_constants_places
 from pyAliceKit.utils.errors.errors import DialogEngineErrors
 from pyAliceKit.utils.tools import load_user_function
 
@@ -32,6 +32,7 @@ class DialogEngine:
                 with open(self.__dialogs_map_file, "r", encoding="utf-8") as f:
                     self.__dialogs_map = json.load(f)
             if self.__settings.DEBUG:
+                putting_dialog_constants_places(self.__settings)
                 dialogs = getattr(self.__settings, "DIALOG_NODES", {})
                 self.__dialogs_map = flatten_dialogs(dialogs)
                 with open(self.__dialogs_map_file, "w", encoding="utf-8") as f:

@@ -1,4 +1,5 @@
 import inspect
+from types import ModuleType
 from typing import Any, Callable, TypeVar, Union, cast
 
 
@@ -105,7 +106,7 @@ def include_nodes(obj: dict[str, Any], DEBUG: bool) -> dict[str, Any]:
 
 
 def get_with_sources(element: Union[dict[Any, Any], list[Any]]) -> dict[str, Any]:
-    def unwrap(obj):
+    def unwrap(obj: Any) -> Any:
         if isinstance(obj, dict) and '__value__' in obj and '__source__' in obj:
             sources.append(obj['__source__'])
             return unwrap(obj['__value__'])
@@ -169,6 +170,55 @@ def get_with_sources(element: Union[dict[Any, Any], list[Any]]) -> dict[str, Any
     }
 
 
-def exporting_node(data: dict[str, Any]) -> dict[str, Any]:
-    DEBUG = True
-    return include_nodes(data, DEBUG)
+def strip_meta(data: Any) -> Any:
+    if not isinstance(data, (dict, list)):
+        return data
+
+    # Для верхнего уровня, если есть __value__, заменяем сразу
+    if isinstance(data, dict) and "__value__" in data:
+        data = data["__value__"]
+
+    stack = [(data, None, None)]  # (текущий_объект, родитель, ключ_или_индекс)
+    root = data if isinstance(data, dict) else list(data)
+
+    while stack:
+        current, parent, parent_key = stack.pop()
+
+        if isinstance(current, dict):
+            # Если есть __value__ внутри — разворачиваем
+            if "__value__" in current:
+                new_val = current["__value__"]
+
+                # Заменяем в родителе
+                if parent is not None:
+                    if isinstance(parent, dict):
+                        parent[parent_key] = new_val
+                    elif isinstance(parent, list):
+                        parent[parent_key] = new_val
+
+                # Теперь новый объект обрабатываем
+                current = new_val
+
+            # Удаляем все ключи вида __xxx__
+            keys_to_delete = [k for k in current.keys() if k.startswith("__") and k.endswith("__")]
+            for k in keys_to_delete:
+                if k != "__value__":
+                    del current[k]
+
+            # Продолжаем обход
+            for k, v in list(current.items()):
+                if isinstance(v, (dict, list)):
+                    stack.append((v, current, k))
+
+        elif isinstance(current, list):
+            for i, v in enumerate(current):
+                if isinstance(v, (dict, list)):
+                    stack.append((v, current, i))
+
+    return root
+
+
+def putting_dialog_constants_places(settings: ModuleType) -> None:
+    settings.DIALOG_NODES_WITH_META = settings.DIALOG_NODES # type: ignore
+    settings.DIALOG_NODES = strip_meta(settings.DIALOG_NODES_WITH_META) # type: ignore
+

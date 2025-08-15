@@ -39,7 +39,8 @@ const redirectKeys = {
     "CONSTANT_BUTTONS": "/buttons.html",
     "STARTING_BUTTONS": "/buttons.html",
     "IMAGES": "/development.html",
-    "MORE_DATA_MESSAGES": "development.html"
+    "MORE_DATA_MESSAGES": "development.html",
+    "DIALOG_NODES_WITH_META": "/dialog_nodes.html"
 }
 
 async function fetchSettings() {

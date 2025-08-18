@@ -16,4 +16,3 @@ formatting_function.py
 types/
 dist/
 *.egg-info/
-pyproject.toml

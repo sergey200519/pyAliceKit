@@ -1,0 +1,81 @@
+/* Секции */
+.section {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Заголовки */
+.section h2 {
+    margin-top: 0;
+    color: #444;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.section h3 {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #2a2a2a;
+}
+
+/* Списки */
+main ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+main ul li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 1rem;
+}
+
+/* Последний элемент без нижней границы */
+main ul li:last-child {
+    border-bottom: none;
+}
+
+/* Группы кнопок */
+.group {
+    margin-bottom: 20px;
+    background: #fcfcfc;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+}
+
+/* Константная кнопка */
+li::after {
+    content: attr(data-const);
+    color: #d9534f;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+/* Выделение скрытых */
+li em {
+    color: #999;
+    font-style: italic;
+}
+
+/* Медиа для мобилок */
+@media (max-width: 600px) {
+    .section {
+        padding: 15px;
+    }
+
+    .section h2 {
+        font-size: 1.2rem;
+    }
+
+    .section h3 {
+        font-size: 1rem;
+    }
+}

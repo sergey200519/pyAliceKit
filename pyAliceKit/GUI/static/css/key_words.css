@@ -1,0 +1,13 @@
+.key_word_section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.key_word_section ul {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    list-style-type: none;
+}

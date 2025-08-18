@@ -1,4 +1,3 @@
-.gitignore
 .DS_Store
 __pycache__/
 plans/
@@ -9,13 +8,9 @@ index.py
 venv/
 modules/
 main.py
-settings.py
 .vscode/
-events.py
 sim.py
-test.py
-buttons.py
-key_words.py
 formatting_function.py
 *.json
 *.txt
+types/

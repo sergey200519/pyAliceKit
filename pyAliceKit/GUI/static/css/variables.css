@@ -1,0 +1,18 @@
+:root {
+    /* Основные цвета интерфейса */
+    --color-bg: #f2f3f7;
+    --color-node-bg-from: rgba(230, 235, 255, 0.6);
+    --color-node-bg-to: rgba(243, 245, 255, 0.6);
+    --color-node-border: #d1d5e3;
+    --color-popup-bg: #ffffff;
+    --color-popup-border: #8a84ff;
+    --color-text-main: #2e2f49;
+    --color-text-muted: #333;
+    --color-button-bg: #8a84ff;
+    --color-button-bg-hover: #6b65e0;
+    --color-arrow-main: #6c6f93;
+    --color-arrow-child: #8a84ff;
+    --color-arrow-transition: #a3a8e4;
+    --color-code-bg: #f2f3f7;
+    --color-code-border: #ddd;
+}

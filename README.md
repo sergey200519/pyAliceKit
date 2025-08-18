@@ -11,7 +11,7 @@
 Установка напрямую с GitHub:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ pyAliceKit
+pip install pyAliceKit
 ```
 
 Python >= 3.10

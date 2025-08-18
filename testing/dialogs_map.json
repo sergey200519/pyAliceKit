@@ -1,0 +1,143 @@
+{
+    "/stop": {
+        "message": "end_message",
+        "buttons": [
+            "$start_buttons"
+        ],
+        "events": [
+            "on_stop"
+        ],
+        "meta": {
+            "desc": "Выход из диалога.",
+            "version": "1.0"
+        }
+    },
+    "/help": {
+        "message": "help",
+        "buttons": [
+            "$main_buttons"
+        ],
+        "events": [
+            "on_help"
+        ],
+        "keywords": [
+            "help"
+        ],
+        "meta": {
+            "desc": "Справка по доступным командам.",
+            "version": "1.0"
+        }
+    },
+    "/start_story/left/end": {
+        "message": "left_end_message",
+        "buttons": [],
+        "events": [
+            "on_end"
+        ],
+        "transitions": [
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Конец левой ветки.",
+            "version": "1.0"
+        },
+        "end_dialog": true
+    },
+    "/start_story/left": {
+        "message": "start_left_message",
+        "buttons": [
+            "$fight_or_run"
+        ],
+        "events": [],
+        "keywords": [
+            "left"
+        ],
+        "transitions": [
+            "/help"
+        ],
+        "meta": {
+            "desc": "Левая ветка истории: лес и волк.",
+            "version": "1.0"
+        },
+        "childs": [
+            "/start_story/left/end"
+        ]
+    },
+    "/start_story/right/talk": {
+        "message": "right_talk_message",
+        "buttons": [],
+        "events": [
+            "on_end"
+        ],
+        "transitions": [
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Диалог с человеком в городе.",
+            "version": "1.0"
+        }
+    },
+    "/start_story/right/hide": {
+        "message": "right_hide_message",
+        "buttons": [],
+        "events": [
+            "on_end"
+        ],
+        "transitions": [
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Ты спрятался в переулке.",
+            "version": "1.0"
+        }
+    },
+    "/start_story/right": {
+        "message": "start_right_message",
+        "buttons": [
+            "$right"
+        ],
+        "events": [],
+        "keywords": [
+            "right"
+        ],
+        "chooser": "def choose_right_path(pyAlice: \"PyAlice\") -> str:\n    print(\"choose_right_path called with user_input:\", pyAlice)\n    if \"поговорить\" in pyAlice.came_message or \"разговор\" in pyAlice.came_message:\n        return \"/start_story/right/talk\"\n    elif \"спрятаться\" in pyAlice.came_message or \"прятаться\" in pyAlice.came_message:\n        return \"/start_story/right/hide\"\n    return \"/start_story/right/talk\"",
+        "transitions": [
+            "/help",
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Правая ветка истории: город и человек.",
+            "version": "1.0"
+        },
+        "chooser_name": "choose_right_path",
+        "childs": [
+            "/start_story/right/talk",
+            "/start_story/right/hide"
+        ]
+    },
+    "/start_story": {
+        "message": "start_story_message",
+        "buttons": [
+            "$left"
+        ],
+        "events": [
+            "on_start_story"
+        ],
+        "keywords": [
+            "start"
+        ],
+        "image": "img1",
+        "transitions": [
+            "/help",
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Начало истории. Выбор направления.",
+            "version": "1.0"
+        },
+        "childs": [
+            "/start_story/left",
+            "/start_story/right"
+        ]
+    }
+}

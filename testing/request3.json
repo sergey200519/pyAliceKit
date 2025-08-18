@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "locale": "ru-RU",
+    "timezone": "UTC",
+    "client_id": "ru.yandex.searchplugin/7.16 (none none; android 4.4.2)",
+    "interfaces": {
+      "screen": {},
+      "payments": {},
+      "account_linking": {}
+    }
+  },
+  "session": {
+    "message_id": 1,
+    "session_id": "44e581f9-c4e8-43f3-9b84-2bce6d9abd4c",
+    "skill_id": "37ccbb22-0b07-4a93-85c0-8517d17ccda7",
+    "user": {
+      "user_id": "150725BC0540B5EDE3E831A6DB9EFA4F5A3E9BD8BD7F800301393F537B2D40E6"
+    },
+    "application": {
+      "application_id": "EA141820AAB4284BCD741A1D9037A49D06166D2141AAE685F9360C6DEF2853B7"
+    },
+    "user_id": "EA141820AAB4284BCD741A1D9037A49D06166D2141AAE685F9360C6DEF2853B7",
+    "new": false
+  },
+  "request": {
+    "command": "привет построй маршрут из раменска в сергиев посад сегодня в 16:00",
+    "original_utterance": "Привет построй маршрут из Раменска в Сергиев Посад сегодня в 16:00",
+    "nlu": {
+      "tokens": [
+        "из",
+        "раменска",
+        "в",
+        "сергиев",
+        "посад",
+        "сегодня",
+        "в",
+        "16",
+        "00"
+      ],
+      "entities": [
+        {
+          "type": "YANDEX.GEO",
+          "tokens": {
+            "start": 2,
+            "end": 5
+          },
+          "value": {
+            "city": "сергиев посад"
+          }
+        },
+        {
+          "type": "YANDEX.FIO",
+          "tokens": {
+            "start": 3,
+            "end": 4
+          },
+          "value": {
+            "last_name": "сергиев"
+          }
+        },
+        {
+          "type": "YANDEX.DATETIME",
+          "tokens": {
+            "start": 5,
+            "end": 9
+          },
+          "value": {
+            "day": 0,
+            "hour": 16,
+            "minute": 0,
+            "day_is_relative": true,
+            "hour_is_relative": false,
+            "minute_is_relative": false
+          }
+        }
+      ],
+      "intents": {
+        "fromtoseveral": {
+          "slots": {
+            "datetime": {
+              "type": "YANDEX.DATETIME",
+              "tokens": {
+                "start": 5,
+                "end": 9
+              },
+              "value": {
+                "day": 0,
+                "hour": 16,
+                "minute": 0,
+                "day_is_relative": true,
+                "hour_is_relative": false,
+                "minute_is_relative": false
+              }
+            },
+            "from": {
+              "type": "YANDEX.STRING",
+              "tokens": {
+                "start": 1,
+                "end": 2
+              },
+              "value": "раменска"
+            },
+            "to": {
+              "type": "YANDEX.STRING",
+              "tokens": {
+                "start": 3,
+                "end": 5
+              },
+              "value": "сергиев посад"
+            }
+          }
+        }
+      }
+    },
+    "markup": {
+      "dangerous_context": false
+    },
+    "type": "SimpleUtterance"
+  },
+  "state": {
+    "session": {},
+    "user": {},
+    "application": {}
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,231 @@
+{
+    "/start/choose_path/forest/fight/hut/enter": {
+        "message": "forest_hut_inside",
+        "end_dialog": true
+    },
+    "/start/choose_path/forest/fight/hut/skip": {
+        "message": "forest_continue",
+        "transitions": [
+            "/river"
+        ]
+    },
+    "/start/choose_path/forest/fight/hut": {
+        "message": "forest_clearing",
+        "buttons": [
+            "$hut_choices"
+        ],
+        "childs": [
+            "/start/choose_path/forest/fight/hut/enter",
+            "/start/choose_path/forest/fight/hut/skip"
+        ]
+    },
+    "/start/choose_path/forest/fight": {
+        "message": "forest_fight",
+        "buttons": [
+            "$hut_choices"
+        ],
+        "childs": [
+            "/start/choose_path/forest/fight/hut"
+        ]
+    },
+    "/start/choose_path/forest/talk/hut/enter": {
+        "message": "forest_hut_inside",
+        "end_dialog": true
+    },
+    "/start/choose_path/forest/talk/hut/skip": {
+        "message": "forest_continue",
+        "transitions": [
+            "/river"
+        ]
+    },
+    "/start/choose_path/forest/talk/hut": {
+        "message": "forest_clearing",
+        "buttons": [
+            "$hut_choices"
+        ],
+        "childs": [
+            "/start/choose_path/forest/talk/hut/enter",
+            "/start/choose_path/forest/talk/hut/skip"
+        ]
+    },
+    "/start/choose_path/forest/talk": {
+        "message": "forest_talk",
+        "buttons": [
+            "$hut_choices"
+        ],
+        "childs": [
+            "/start/choose_path/forest/talk/hut"
+        ]
+    },
+    "/start/choose_path/forest": {
+        "message": "forest_start",
+        "buttons": [
+            "$forest_choices"
+        ],
+        "keywords": [
+            "forest",
+            "лес"
+        ],
+        "childs": [
+            "/start/choose_path/forest/fight",
+            "/start/choose_path/forest/talk"
+        ]
+    },
+    "/start/choose_path/city/merchant/buy": {
+        "message": "Ты купил меч. Теперь ты вооружён!",
+        "transitions": [
+            "/river"
+        ]
+    },
+    "/start/choose_path/city/merchant/skip": {
+        "message": "Ты отказался от меча и пошёл дальше.",
+        "transitions": [
+            "/river"
+        ]
+    },
+    "/start/choose_path/city/merchant": {
+        "message": "city_merchant",
+        "buttons": [
+            "$merchant_choices"
+        ],
+        "childs": [
+            "/start/choose_path/city/merchant/buy",
+            "/start/choose_path/city/merchant/skip"
+        ]
+    },
+    "/start/choose_path/city/inn/wine": {
+        "message": "city_wine",
+        "end_dialog": true
+    },
+    "/start/choose_path/city/inn/news": {
+        "message": "city_news",
+        "transitions": [
+            "/forest",
+            "/river"
+        ]
+    },
+    "/start/choose_path/city/inn": {
+        "message": "city_inn",
+        "buttons": [
+            "$inn_choices"
+        ],
+        "childs": [
+            "/start/choose_path/city/inn/wine",
+            "/start/choose_path/city/inn/news"
+        ]
+    },
+    "/start/choose_path/city": {
+        "message": "city_start",
+        "buttons": [
+            "$city_choices"
+        ],
+        "childs": [
+            "/start/choose_path/city/merchant",
+            "/start/choose_path/city/inn"
+        ]
+    },
+    "/start/choose_path/river/boat": {
+        "message": "river_boat",
+        "end_dialog": true
+    },
+    "/start/choose_path/river/bridge/enter": {
+        "message": "river_cave",
+        "end_dialog": true
+    },
+    "/start/choose_path/river/bridge/skip": {
+        "message": "Ты прошёл мимо пещеры и ушёл далеко. Конец.",
+        "end_dialog": true
+    },
+    "/start/choose_path/river/bridge": {
+        "message": "river_bridge",
+        "buttons": [
+            "$cave_choices"
+        ],
+        "childs": [
+            "/start/choose_path/river/bridge/enter",
+            "/start/choose_path/river/bridge/skip"
+        ]
+    },
+    "/start/choose_path/river": {
+        "message": "river_start",
+        "buttons": [
+            "$river_choices"
+        ],
+        "childs": [
+            "/start/choose_path/river/boat",
+            "/start/choose_path/river/bridge"
+        ]
+    },
+    "/start/choose_path": {
+        "message": "choose_path_message",
+        "buttons": [
+            "$path_choices"
+        ],
+        "keywords": [
+            "left",
+            "right",
+            "river"
+        ],
+        "transitions": [
+            "/help",
+            "$prev"
+        ],
+        "meta": {
+            "desc": "Выбор пути: лес, город или река.",
+            "version": "2.0"
+        },
+        "childs": [
+            "/start/choose_path/forest",
+            "/start/choose_path/city",
+            "/start/choose_path/river"
+        ]
+    },
+    "/start": {
+        "message": "intro_message",
+        "buttons": [
+            "$main_start"
+        ],
+        "events": [
+            "on_start"
+        ],
+        "keywords": [
+            "start"
+        ],
+        "meta": {
+            "desc": "Начало большого приключения.",
+            "version": "2.0"
+        },
+        "childs": [
+            "/start/choose_path"
+        ]
+    },
+    "/help": {
+        "message": "help",
+        "buttons": [
+            "$main_buttons"
+        ],
+        "events": [
+            "on_help"
+        ],
+        "keywords": [
+            "help"
+        ],
+        "meta": {
+            "desc": "Справка по доступным командам.",
+            "version": "2.0"
+        }
+    },
+    "/stop": {
+        "message": "end_message",
+        "buttons": [
+            "$start_buttons"
+        ],
+        "events": [
+            "on_stop"
+        ],
+        "meta": {
+            "desc": "Выход из игры.",
+            "version": "2.0"
+        }
+    }
+}
